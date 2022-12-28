@@ -1,0 +1,12 @@
+---
+title: "Building your website with Quarto"
+#author: "Tero Jalkanen"
+date: "2022-12-28"
+categories: [blog, quarto]
+---
+
+A story about how I built this website with Quarto.
+
+This website is built with Quarto. To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+
+Albert Rapp has written a great overview on [how to setup a blog with Quarto](https://albert-rapp.de/posts/13_quarto_blog_writing_guide/13_quarto_blog_writing_guide.html).
