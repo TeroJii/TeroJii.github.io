@@ -1,11 +1,31 @@
 ---
-title: "home"
+title: "Tero Jalkanen"
+image: Tero_tiny.jpg
+about:
+  template: trestles
+  image-shape: round
+  links:
+    - icon: linkedin
+      text: LinkedIn
+      href: https://fi.linkedin.com/in/tero-jalkanen-a4160b12b
+    - icon: github
+      text: Github
+      href: https://github.com/TeroJii
+
 ---
 
-This is a Quarto website.
+Something about this website. 
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
 
-```{r}
-1 + 1
-```
+# Education
+
+**University of Turku** | Turku, Finland
+
+PhD in Physics
+
+
+# Experience
+
+**Senior Data Scientist** | EstiMates
+
+**Senior Scientist** | Bayer
