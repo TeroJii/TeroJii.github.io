@@ -1,9 +1,12 @@
 ---
-title: "About"
+title: "Tero's Blog"
+listing:
+  contents: posts
+  sort: "date desc"
+  type: default
+  categories: true
+  sort-ui: false
+  filter-ui: false
+page-layout: full
+title-block-banner: false
 ---
-
-About this site
-
-```{r}
-1 + 1
-```
