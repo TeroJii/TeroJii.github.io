@@ -10,6 +10,7 @@ library(readxl)
 pubs <- readxl::read_xlsx(path = "dat/publications.xlsx", sheet = 1, col_names = TRUE)
 procs <- readxl::read_xlsx(path = "dat/publications.xlsx", sheet = 2, col_names = TRUE)
 open_data <- readxl::read_xlsx(path = "dat/publications.xlsx", sheet = 3, col_names = TRUE)
+thesis <- readxl::read_xlsx(path = "dat/publications.xlsx", sheet = 4, col_names = TRUE)
 
 ```
 
@@ -39,4 +40,12 @@ knitr::kable(procs, row.names = FALSE)
 #| echo: false
 
 knitr::kable(open_data, row.names = FALSE)
+```
+
+## Thesis
+
+```{r}
+#| echo: false
+
+knitr::kable(thesis, row.names = FALSE)
 ```
