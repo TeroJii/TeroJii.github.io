@@ -2,4 +2,41 @@
 title: "Publications"
 ---
 
-A list of publications here:
+```{r}
+#| include: false
+
+library(readxl)
+
+pubs <- readxl::read_xlsx(path = "dat/publications.xlsx", sheet = 1, col_names = TRUE)
+procs <- readxl::read_xlsx(path = "dat/publications.xlsx", sheet = 2, col_names = TRUE)
+open_data <- readxl::read_xlsx(path = "dat/publications.xlsx", sheet = 3, col_names = TRUE)
+
+```
+
+
+## Peer-Reviewed Publications
+
+
+```{r}
+#| echo: false
+
+knitr::kable(pubs, row.names = FALSE)
+```
+
+## Peer-Reviewed Conference proceedings 
+
+
+```{r}
+#| echo: false
+
+knitr::kable(procs, row.names = FALSE)
+```
+
+## Open Data
+
+
+```{r}
+#| echo: false
+
+knitr::kable(open_data, row.names = FALSE)
+```
