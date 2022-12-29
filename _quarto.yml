@@ -9,6 +9,8 @@ website:
         text: Home
       - href: publications.qmd
         text: Publications
+      # - href: talks.qmd
+      #   text: Talks
       - href: blog.qmd
         text: Blog
       - icon: github
@@ -17,6 +19,7 @@ website:
 format:
   html:
     theme: spacelab
+    page-layout: full
     css: styles.css
     toc: true
 
