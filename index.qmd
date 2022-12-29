@@ -14,18 +14,38 @@ about:
 
 ---
 
-Something about this website. 
+# Bio
 
+I'm a data scientist working in a statistical consulting company. In this role, I help life science companies working on novel drugs, diagnostic tests, and alike, with any data-related challenges they might face. I'm trained as a physicist with specialization towards materials science, but I also have extensive experience in working in the pharmaceutical industry.
 
 # Education
 
-**University of Turku** | Turku, Finland
+**PhD in Physics** | University of Turku, Finland (2008-2012).
 
-PhD in Physics
+Wrote my [thesis on nanostructured silicon optical filters](publications.qmd#thesis).
 
+**MSc in Physics** | University of Turku, Finland (2002-2008).
+
+Minored in Mathematics.
 
 # Experience
 
-**Senior Data Scientist** | EstiMates
+**Senior Data Scientist** | EstiMates (2022-present)
 
-**Senior Scientist** | Bayer
+Data science consulting for life science companies.
+
+**Senior Scientist** | Bayer (2018-2022)
+
+**Expert Scientist** | Bayer (2016-2018)
+
+**Scientist** | Bayer (2014-2016)
+
+Development of long-acting drug delivery formulations, internal statistical consultation, project management etc.
+
+**Post-Doctoral Researcher** | University of Turku, Finland (2012-2014)
+
+Worked at the department of Physics and Astronomy. Independent research on nanomaterials, and materials science related consulting for external companies. Teaching students in Physics Lab II & III.
+
+**Visiting Researcher** | Kyoto University, Japan (2010-2012)
+
+Worked at the laboratory of Prof. Yukio Ogata for 18 months with a scholarship from the Japanese Ministry of Education, Culture, Sports, Science and Technology.
