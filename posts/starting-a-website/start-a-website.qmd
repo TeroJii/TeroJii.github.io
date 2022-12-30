@@ -1,18 +1,183 @@
 ---
 title: "Building your website with Quarto"
 #author: "Tero Jalkanen"
-date: "2022-12-28"
+date: "2023-01-10"
 categories: [blog, quarto]
 description: 'A brief story about how I built this website with Quarto'
+draft: false
 ---
 
-This website is built with [Quarto](https://quarto.org/), which is an open-source publishing system, and it can be used for making reports, books, presentations, websites etc. I wanted to learn how to use Quarto for making a website, so I decided to make one for myself.
+This website is built with [Quarto](https://quarto.org/), which is an open-source publishing system. It can be used for making reports, books, presentations, websites etc. I wanted to learn how to use Quarto for making a website, so I decided to make one for myself. Let's see what's needed for creating a basic website.
 
 # Before we start
 
-Building a website might seem intimidating. At least that's how I felt, having never done it before. Luckily, Quarto makes the process quite pleasant. I also found a couple of nice resources that walk you through the process. If you want to try it out I recommend reading the [websites](https://quarto.org/docs/websites) section on the Quarto website.
-Albert Rapp has written a great overview on [how to setup a blog with Quarto](https://albert-rapp.de/posts/13_quarto_blog_writing_guide/13_quarto_blog_writing_guide.html), which I found very helpful as an R user.
+Building a website might seem intimidating. At least that's how I felt, having never done it before. Luckily, Quarto makes the process quite pleasant. I also ran into a couple of excellent resources that walk you through the process. 
+
+If you are interested in setting up your own website, I recommend reading the [websites](https://quarto.org/docs/websites) section on the Quarto website as a first step. Additionally, Albert Rapp has written a great tutorial on [how to setup a blog with Quarto](https://albert-rapp.de/posts/13_quarto_blog_writing_guide/13_quarto_blog_writing_guide.html). As a fellow R user, I found Albert's instructions very helpful.
 
 # What you will need
 
-The latest version of RStudio includes a built-in version of Quarto. Updating RStudio is most likely the easiest way of installing Quarto. You will also need a [github](https://github.com) account.
+I used RStudio for creating all the files for my website. The latest version of RStudio includes a built-in version of Quarto. Updating RStudio is most likely the easiest way of installing Quarto. You will also need a [GitHub](https://github.com) account to setup a repository. If working with `git` and `GitHub` is not familiar to you, have a look at Jenny Bryan's wonderful [Happy Git and GitHub for the useR](https://happygitwithr.com/) to help you get started.
+
+# Setting up a local website
+
+First you need to start a new project in a new directory inside RStudio. Choose `Quarto Website` as the project type. You can easily add a blog to your website later if you want. I'll show you in a minute.
+
+```{r}
+#| echo: false
+#| fig-width: 4
+knitr::include_graphics(path = "RStudioQuartoWebsite.png")
+```
+
+Choose a directory for your project, and tick the box that says "Create a git repository". You should end up with something like this:
+
+```{r}
+#| echo: false
+#| fig-width: 4
+knitr::include_graphics(path = "blank-project.png")
+```
+
+Click on the Render button to see your new website. It should open in a browser window or the RStudio viewer pane. If nothing happens, click on the gear icon next to the Render button and choose `Preview in Window`. The website should look like this:
+
+```{r}
+#| echo: false
+#| fig-width: 4
+knitr::include_graphics(path = "first-website.png")
+```
+
+Congratulations, you now have a local website on your computer.
+
+# Setting up a GitHub repo
+
+There are several ways to achieve this. If you're new to working with git and GitHub, then it might be easiest to create an empty repository to GitHub first, and move all the files from your local project there. This was the approach I took. You can find great instructions by Jenny Brian from [here](https://happygitwithr.com/existing-github-last.html#create-and-connect-a-github-repo-without-usethis).
+
+Briefly:
+
+1) Log on to <https://github.com/>
+
+2) Create a repository with the same name as your local website project in RStudio. Make the repository public, and leave everything else blank for now:
+
+```{r}
+#| echo: false
+#| fig-width: 4
+knitr::include_graphics(path = "git-repo.png")
+```
+
+3) Copy the repository URL to your clipboard. It should be in the format: `https://github.com/your-username/your-repo-name.git`
+
+# Connecting your local repo to GitHub
+
+Go to the git pane in RStudio and click the button shown below (circled with red).
+
+```{r}
+#| echo: false
+#| fig-width: 4
+knitr::include_graphics(path = "git-pane.png")
+```
+
+In the `New Branch` pop-up menu, click `Add Remote...` and paste your repository URL there. In the `Remote Name:` field, write "origin". Now,  write "main" in the `Branch Name:` field, and make sure the `Sync Branch with remote` tick box is checked before hitting `Create`. 
+
+```{r}
+#| echo: false
+#| fig-width: 2
+knitr::include_graphics(path = "Sync-attempt-1.png")
+```
+
+
+This will throw you a bunch of error messages. Not to worry. This is because we forgot to commit our files. Click of the Staged tick boxes in the git pane and push `commit`. A pop-up pane will appear. Write a brief commit message and push the `Commit` button:
+
+```{r}
+#| echo: false
+#| fig-width: 2
+knitr::include_graphics(path = "initial-commit.png")
+```
+
+Now let's try to sync the repos again. Push the button with purple squares again and  push `Create` in the pop-up menu to sync the repos:
+
+```{r}
+#| echo: false
+#| fig-width: 2
+knitr::include_graphics(path = "sync-again.png")
+```
+
+You will get a warning message. Push `Overwrite` and sync the repos:
+
+```{r}
+#| echo: false
+#| fig-width: 2
+knitr::include_graphics(path = "warnign.png")
+```
+
+You're done:
+
+```{r}
+#| echo: false
+#| fig-width: 2
+knitr::include_graphics(path = "done.png")
+```
+
+If you now visit to your github repo's website at `https://github.com/your-username/your-repo-name`, you should find all the files you committed there. From now on, you should be able to update any local changes to your GitHub-repo by committing and pushing from the Git-pane.
+
+# Creating content to your website
+
+Let's add a blog to our website. We can do this by editing the `_quarto.yml` file:
+
+```{r}
+#| echo: false
+#| fig-width: 2
+knitr::include_graphics(path = "add-blog.png")
+
+```
+
+All we need to do is to add two lines of text to the file. The `text:` field saying "Blog" will create a button to the navbar, and the `href:` field will tell quarto which file to refer to for blog content. Next, we will create an empty file called `blog.qmd`, and add the following content to the file:
+
+```{r}
+#| echo: false
+#| fig-width: 2
+knitr::include_graphics(path = "blog-2.png")
+
+```
+
+The `contents:` field in the above file, which states `posts`, tells quarto to look for blog content inside a folder called `posts`. Let's create a folder by that name inside our project root. Your files pane should now look like this:
+
+```{r}
+#| echo: false
+#| fig-width: 2
+knitr::include_graphics(path = "files-pane.png")
+
+```
+
+In order to create our first post, let's add a qmd-file inside the posts folder. The file should look something like this:
+
+```{r}
+#| echo: false
+#| fig-width: 2
+knitr::include_graphics(path = "first-post.png")
+
+```
+
+We are now ready to test drive our blog. Save all your files, and then click Render to see your new website:
+
+```{r}
+#| echo: false
+#| fig-width: 2
+knitr::include_graphics(path = "your-new-blog.png")
+
+```
+
+Our blog has appeared to the local website. As a final step let's commit and push to add our changes to GitHub:
+
+```{r}
+#| echo: false
+#| fig-width: 2
+knitr::include_graphics(path = "commit-and-push.png")
+
+```
+
+Read Albert's [blog post](https://albert-rapp.de/posts/13_quarto_blog_writing_guide/13_quarto_blog_writing_guide.html) for more tips on customizing the appearance of your website.
+
+# Publishing your website through Github pages
+
+There are many ways to make your website available for others to read. GitHub pages is a pretty straightforward way to do this. The [Quarto documentation has excellent instructions on how to do this](https://quarto.org/docs/publishing/github-pages.html), and they also have information on [other publishers](https://quarto.org/docs/publishing/) as well.
+
+So that's basically it. Quarto makes it pretty easy to build a website from scratch. Hope you enjoyed reading.

@@ -1,0 +1,14 @@
+---
+title: "Hello Blog"
+date: "2022-12-30"
+categories: [blog]
+description: 'Welcome to my blog'
+---
+
+Hi there, and welcome to my blog!
+
+I used to write a blog years ago, when I was living abroad, and I quite liked it. After a long hiatus, I thought that it might be nice to give it a try once more.
+
+This blog is intended mostly for myself, to help me clarify my thoughts around data science related topics. I have found that writing is a very helpful aid in learning things. If someone else also finds the topics interesting/useful, then that is a great bonus.
+
+Welcome aboard. Let's see what lies ahead.
