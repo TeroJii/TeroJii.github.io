@@ -6,6 +6,7 @@ title: "Publications"
 #| include: false
 
 library(readxl)
+library(tidyverse)
 
 pubs <- readxl::read_xlsx(path = "dat/publications.xlsx", sheet = 1, col_names = TRUE)
 procs <- readxl::read_xlsx(path = "dat/publications.xlsx", sheet = 2, col_names = TRUE)
@@ -17,12 +18,108 @@ thesis <- readxl::read_xlsx(path = "dat/publications.xlsx", sheet = 4, col_names
 
 ## Peer-Reviewed Publications
 
+### 2021
 
 ```{r}
 #| echo: false
 
-knitr::kable(pubs, row.names = FALSE)
+print_pubs <- function(year_brac = "(2021)"){
+  
+  out <- pubs %>% filter(grepl(pattern = year_brac, x = `Info & link`)) %>% 
+    mutate(art = paste(Authors, Title, `Info & link`, sep = "; ")) %>% 
+    pull(art)
+  
+  return(out)
+}
+
+out <- print_pubs()
+  
 ```
+
+`r out`
+
+### 2018
+
+```{r}
+#| echo: false
+out <- print_pubs(year_brac = "(2018)")
+```
+
+`r out`
+
+
+### 2016
+
+```{r}
+#| echo: false
+out <- print_pubs(year_brac = "(2016)")
+```
+
+`r out`
+
+
+### 2015
+
+```{r}
+#| echo: false
+out <- print_pubs(year_brac = "(2015)")
+```
+
+`r out`
+
+### 2014
+
+```{r}
+#| echo: false
+out <- print_pubs(year_brac = "(2014)")
+```
+
+`r out`
+
+### 2012
+
+```{r}
+#| echo: false
+out <- print_pubs(year_brac = "(2012)")
+
+```
+
+`r out[1]`
+
+`r out[2]`
+
+`r out[3]`
+
+### 2011
+
+```{r}
+#| echo: false
+out <- print_pubs(year_brac = "(2011)")
+```
+
+`r out`
+
+### 2010
+
+```{r}
+#| echo: false
+out <- print_pubs(year_brac = "(2010)")
+```
+
+`r out`
+
+### 2009
+
+```{r}
+#| echo: false
+out <- print_pubs(year_brac = "(2009)")
+```
+
+`r out[1]`
+
+`r out[2]`
+
+`r out[3]`
 
 ## Peer-Reviewed Conference proceedings 
 
