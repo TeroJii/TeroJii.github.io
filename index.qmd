@@ -16,7 +16,7 @@ about:
 
 # Bio
 
-I'm a data scientist working in a statistical consulting company. In this role, I help life science companies working on novel drugs, diagnostic tests, and alike, with any data-related challenges they might face. I'm trained as a physicist with specialization towards materials science, but I also have extensive experience in working in the pharmaceutical industry.
+I'm a data scientist working in a statistical consulting company. In this role, I help life science companies working on novel drugs, diagnostic tests, and alike, with any data-related challenges they might face. I'm trained as a physicist with specialization towards materials science. I also have extensive experience in working in the pharmaceutical industry.
 
 # Education
 
@@ -34,18 +34,14 @@ Minored in Mathematics.
 
 Data science consulting for life science companies.
 
-**Senior Scientist** | Bayer (2018-2022)
-
-**Expert Scientist** | Bayer (2016-2018)
-
-**Scientist** | Bayer (2014-2016)
+**Senior Scientist** / **Expert Scientist** / **Scientist** | Bayer (2014-2022)
 
 Development of long-acting drug delivery formulations, internal statistical consultation, project management etc.
 
 **Post-Doctoral Researcher** | University of Turku, Finland (2012-2014)
 
-Worked at the department of Physics and Astronomy. Independent research on nanomaterials, and materials science related consulting for external companies. Teaching students in Physics Lab II & III.
+Independent research on nanomaterials at the department of Physics and Astronomy, and materials science related consulting for external companies. Teaching students in Physics Lab II & III.
 
 **Visiting Researcher** | Kyoto University, Japan (2010-2012)
 
-Worked at the laboratory of Prof. Yukio Ogata for 18 months with a scholarship from the Japanese Ministry of Education, Culture, Sports, Science and Technology.
+Worked at the Institute of Advanced Energy for 18 months with a scholarship from the Japanese Ministry of Education, Culture, Sports, Science and Technology.
