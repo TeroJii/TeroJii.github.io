@@ -7,7 +7,7 @@ description: 'A brief story about how I built this website with Quarto'
 draft: false
 ---
 
-This website is built with [Quarto](https://quarto.org/), which is an open-source publishing system. It can be used for making reports, books, presentations, websites etc. I wanted to learn how to use Quarto for making a website, so I decided to make one for myself. Let's see what's needed for creating a basic website.
+This website is built with [Quarto](https://quarto.org/), which is an open-source publishing system. It can be used for making reports, books, presentations, websites etc. I wanted to learn how to use Quarto for making a website, so I decided to make one for myself. In this blog post I'll go trough some the basics which are needed for creating a simple website.
 
 # Before we start
 
@@ -21,7 +21,7 @@ I used RStudio for creating all the files for my website. The latest version of 
 
 # Setting up a local website
 
-First you need to start a new project in a new directory inside RStudio. Choose `Quarto Website` as the project type. You can easily add a blog to your website later if you want. I'll show you in a minute.
+Before launching a website for everyone to see, we first need to build the site locally on our computer. To do this, you need to start a new project in a new directory inside RStudio. Choose `Quarto Website` as the project type. You can easily add a blog to your website later if you want. I'll show you in a minute how that is done.
 
 ```{r}
 #| echo: false
@@ -84,7 +84,19 @@ knitr::include_graphics(path = "Sync-attempt-1.png")
 ```
 
 
-This will throw you a bunch of error messages. Not to worry. This is because we forgot to commit our files. Click of the Staged tick boxes in the git pane and push `commit`. A pop-up pane will appear. Write a brief commit message and push the `Commit` button:
+This will throw you a bunch of error messages. Not to worry. This is because we forgot to commit our files. 
+
+## Committing the files
+
+Go to RStudio git-pane:
+
+```{r}
+#| echo: false
+#| fig-width: 2
+knitr::include_graphics(path = "git-pane2.png")
+```
+
+Click of the Staged tick boxes in the git pane and push `commit`. A pop-up pane will appear. Write a brief commit message and push the `Commit` button:
 
 ```{r}
 #| echo: false
@@ -116,7 +128,7 @@ You're done:
 knitr::include_graphics(path = "done.png")
 ```
 
-If you now visit to your github repo's website at `https://github.com/your-username/your-repo-name`, you should find all the files you committed there. From now on, you should be able to update any local changes to your GitHub-repo by committing and pushing from the Git-pane.
+When you now visit your github repo at `https://github.com/your-username/your-repo-name`, you should find all the files you committed there. From now on, you should be able to update any local changes to your GitHub-repo by committing and pushing from the Git-pane.
 
 # Creating content to your website
 
