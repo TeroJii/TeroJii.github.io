@@ -1,7 +1,7 @@
 ---
 title: "Building your website with Quarto"
 #author: "Tero Jalkanen"
-date: "2023-01-10"
+date: "2023-01-05"
 categories: [blog, quarto]
 description: 'A brief story about how I built this website with Quarto'
 draft: false
