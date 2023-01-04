@@ -188,8 +188,8 @@ knitr::include_graphics(path = "commit-and-push.png")
 
 Read Albert's [blog post](https://albert-rapp.de/posts/13_quarto_blog_writing_guide/13_quarto_blog_writing_guide.html) for more tips on customizing the appearance of your website.
 
-# Publishing your website through Github pages
+# Publishing your website through GitHub Pages
 
-There are many ways to make your website available for others to read. GitHub pages is a pretty straightforward way to do this. The [Quarto documentation has excellent instructions on how to do this](https://quarto.org/docs/publishing/github-pages.html), and they also have information on [other publishers](https://quarto.org/docs/publishing/) as well.
+There are many ways to make your website available for others to read. [GitHub Pages](https://pages.github.com/) is a pretty straightforward way to do this. The [Quarto documentation has excellent instructions on how to do this](https://quarto.org/docs/publishing/github-pages.html), and they also have information on [other publishers](https://quarto.org/docs/publishing/) as well. I recommend following the instructions above. It should be quite easy.
 
 So that's basically it. Quarto makes it pretty easy to build a website from scratch. Hope you enjoyed reading.
