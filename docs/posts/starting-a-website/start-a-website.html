@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Tero Jalkanen">
+<meta name="dcterms.date" content="2023-01-05">
+<meta name="description" content="A brief story about how I built this website with Quarto">
+
+<title>Tero Jalkanen - Building your website with Quarto</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Tero Jalkanen</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications.html">
+ <span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html">
+ <span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/TeroJii"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#before-we-start" id="toc-before-we-start" class="nav-link active" data-scroll-target="#before-we-start">Before we start</a></li>
+  <li><a href="#what-you-will-need" id="toc-what-you-will-need" class="nav-link" data-scroll-target="#what-you-will-need">What you will need</a></li>
+  <li><a href="#setting-up-a-local-website" id="toc-setting-up-a-local-website" class="nav-link" data-scroll-target="#setting-up-a-local-website">Setting up a local website</a></li>
+  <li><a href="#setting-up-a-github-repo" id="toc-setting-up-a-github-repo" class="nav-link" data-scroll-target="#setting-up-a-github-repo">Setting up a GitHub repo</a></li>
+  <li><a href="#connecting-your-local-repo-to-github" id="toc-connecting-your-local-repo-to-github" class="nav-link" data-scroll-target="#connecting-your-local-repo-to-github">Connecting your local repo to GitHub</a>
+  <ul class="collapse">
+  <li><a href="#committing-the-files" id="toc-committing-the-files" class="nav-link" data-scroll-target="#committing-the-files">Committing the files</a></li>
+  </ul></li>
+  <li><a href="#creating-content-to-your-website" id="toc-creating-content-to-your-website" class="nav-link" data-scroll-target="#creating-content-to-your-website">Creating content to your website</a></li>
+  <li><a href="#publishing-your-website-through-github-pages" id="toc-publishing-your-website-through-github-pages" class="nav-link" data-scroll-target="#publishing-your-website-through-github-pages">Publishing your website through GitHub Pages</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Building your website with Quarto</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">blog</div>
+    <div class="quarto-category">quarto</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    A brief story about how I built this website with Quarto
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Tero Jalkanen </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 5, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<p>This website is built with <a href="https://quarto.org/">Quarto</a>, which is an open-source publishing system. It can be used for making reports, books, presentations, websites etc. I wanted to learn how to use Quarto for making a website, so I decided to make one for myself. In this blog post I’ll go trough some the basics which are needed for creating a simple website.</p>
+<section id="before-we-start" class="level1">
+<h1>Before we start</h1>
+<p>Building a website might seem intimidating. At least that’s how I felt, having never done it before. Luckily, Quarto makes the process quite pleasant. I also ran into a couple of excellent resources that walk you through the process.</p>
+<p>If you are interested in setting up your own website, I recommend reading the <a href="https://quarto.org/docs/websites">websites</a> section on the Quarto website as a first step. Additionally, Albert Rapp has written a great tutorial on <a href="https://albert-rapp.de/posts/13_quarto_blog_writing_guide/13_quarto_blog_writing_guide.html">how to setup a blog with Quarto</a>. As a fellow R user, I found Albert’s instructions very helpful.</p>
+</section>
+<section id="what-you-will-need" class="level1">
+<h1>What you will need</h1>
+<p>I used RStudio for creating all the files for my website. The latest version of RStudio includes a built-in version of Quarto. Updating RStudio is most likely the easiest way of installing Quarto. You will also need a <a href="https://github.com">GitHub</a> account to setup a repository. If working with <code>git</code> and <code>GitHub</code> is not familiar to you, have a look at Jenny Bryan’s wonderful <a href="https://happygitwithr.com/">Happy Git and GitHub for the useR</a> to help you get started.</p>
+</section>
+<section id="setting-up-a-local-website" class="level1">
+<h1>Setting up a local website</h1>
+<p>Before launching a website for everyone to see, we first need to build the site locally on our computer. To do this, you need to start a new project in a new directory inside RStudio. Choose <code>Quarto Website</code> as the project type. You can easily add a blog to your website later if you want. I’ll show you in a minute how that is done.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="RStudioQuartoWebsite.png" class="img-fluid" width="402"></p>
+</div>
+</div>
+<p>Choose a directory for your project, and tick the box that says “Create a git repository”. You should end up with something like this:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="blank-project.png" class="img-fluid" width="508"></p>
+</div>
+</div>
+<p>Click on the Render button to see your new website. It should open in a browser window or the RStudio viewer pane. If nothing happens, click on the gear icon next to the Render button and choose <code>Preview in Window</code>. The website should look like this:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="first-website.png" class="img-fluid" width="552"></p>
+</div>
+</div>
+<p>Congratulations, you now have a local website on your computer.</p>
+</section>
+<section id="setting-up-a-github-repo" class="level1">
+<h1>Setting up a GitHub repo</h1>
+<p>There are several ways to achieve this. If you’re new to working with git and GitHub, then it might be easiest to create an empty repository to GitHub first, and move all the files from your local project there. This was the approach I took. You can find great instructions by Jenny Brian from <a href="https://happygitwithr.com/existing-github-last.html#create-and-connect-a-github-repo-without-usethis">here</a>.</p>
+<p>Briefly:</p>
+<ol type="1">
+<li><p>Log on to <a href="https://github.com/" class="uri">https://github.com/</a></p></li>
+<li><p>Create a repository with the same name as your local website project in RStudio. Make the repository public, and leave everything else blank for now:</p></li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="git-repo.png" class="img-fluid" width="551"></p>
+</div>
+</div>
+<ol start="3" type="1">
+<li>Copy the repository URL to your clipboard. It should be in the format: <code>https://github.com/your-username/your-repo-name.git</code></li>
+</ol>
+</section>
+<section id="connecting-your-local-repo-to-github" class="level1">
+<h1>Connecting your local repo to GitHub</h1>
+<p>Go to the git pane in RStudio and click the button shown below (circled with red).</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="git-pane.png" class="img-fluid" width="322"></p>
+</div>
+</div>
+<p>In the <code>New Branch</code> pop-up menu, click <code>Add Remote...</code> and paste your repository URL there. In the <code>Remote Name:</code> field, write “origin”. Now, write “main” in the <code>Branch Name:</code> field, and make sure the <code>Sync Branch with remote</code> tick box is checked before hitting <code>Create</code>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="Sync-attempt-1.png" class="img-fluid" width="230"></p>
+</div>
+</div>
+<p>This will throw you a bunch of error messages. Not to worry. This is because we forgot to commit our files.</p>
+<section id="committing-the-files" class="level2">
+<h2 class="anchored" data-anchor-id="committing-the-files">Committing the files</h2>
+<p>Go to RStudio git-pane:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="git-pane2.png" class="img-fluid" width="236"></p>
+</div>
+</div>
+<p>Click of the Staged tick boxes in the git pane and push <code>commit</code>. A pop-up pane will appear. Write a brief commit message and push the <code>Commit</code> button:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="initial-commit.png" class="img-fluid" width="308"></p>
+</div>
+</div>
+<p>Now let’s try to sync the repos again. Push the button with purple squares again and push <code>Create</code> in the pop-up menu to sync the repos:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="sync-again.png" class="img-fluid" width="240"></p>
+</div>
+</div>
+<p>You will get a warning message. Push <code>Overwrite</code> and sync the repos:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="warnign.png" class="img-fluid" width="419"></p>
+</div>
+</div>
+<p>You’re done:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="done.png" class="img-fluid" width="514"></p>
+</div>
+</div>
+<p>When you now visit your github repo at <code>https://github.com/your-username/your-repo-name</code>, you should find all the files you committed there. From now on, you should be able to update any local changes to your GitHub-repo by committing and pushing from the Git-pane.</p>
+</section>
+</section>
+<section id="creating-content-to-your-website" class="level1">
+<h1>Creating content to your website</h1>
+<p>Let’s add a blog to our website. We can do this by editing the <code>_quarto.yml</code> file:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="add-blog.png" class="img-fluid" width="194"></p>
+</div>
+</div>
+<p>All we need to do is to add two lines of text to the file. The <code>text:</code> field saying “Blog” will create a button to the navbar, and the <code>href:</code> field will tell quarto which file to refer to for blog content. Next, we will create an empty file called <code>blog.qmd</code>, and add the following content to the file:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="blog-2.png" class="img-fluid" width="308"></p>
+</div>
+</div>
+<p>The <code>contents:</code> field in the above file, which states <code>posts</code>, tells quarto to look for blog content inside a folder called <code>posts</code>. Let’s create a folder by that name inside our project root. Your files pane should now look like this:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="files-pane.png" class="img-fluid" width="232"></p>
+</div>
+</div>
+<p>In order to create our first post, let’s add a qmd-file inside the posts folder. The file should look something like this:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="first-post.png" class="img-fluid" width="334"></p>
+</div>
+</div>
+<p>We are now ready to test drive our blog. Save all your files, and then click Render to see your new website:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="your-new-blog.png" class="img-fluid" width="484"></p>
+</div>
+</div>
+<p>Our blog has appeared to the local website. As a final step let’s commit and push to add our changes to GitHub:</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="commit-and-push.png" class="img-fluid" width="740"></p>
+</div>
+</div>
+<p>Read Albert’s <a href="https://albert-rapp.de/posts/13_quarto_blog_writing_guide/13_quarto_blog_writing_guide.html">blog post</a> for more tips on customizing the appearance of your website.</p>
+</section>
+<section id="publishing-your-website-through-github-pages" class="level1">
+<h1>Publishing your website through GitHub Pages</h1>
+<p>There are many ways to make your website available for others to read. <a href="https://pages.github.com/">GitHub Pages</a> is a pretty straightforward way to do this. The <a href="https://quarto.org/docs/publishing/github-pages.html">Quarto documentation has excellent instructions on how to do this</a>, and they also have information on <a href="https://quarto.org/docs/publishing/">other publishers</a> as well. I recommend following the instructions above. It should be quite easy.</p>
+<p>So that’s basically it. Quarto makes it pretty easy to build a website from scratch. Hope you enjoyed reading.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
