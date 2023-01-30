@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/03-dual-axis-plots.html",
       "/posts/starting-a-website/start-a-website.html",
       "/posts/01-hello-blog.html"
     ]

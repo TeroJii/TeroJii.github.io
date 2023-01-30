@@ -1,0 +1,155 @@
+---
+title: "Creating dual y-axis plots with ggplot2"
+date: "2023-01-30"
+categories: [ggplot2, dataviz]
+description: 'Sometimes one y-axis just does not suffice'
+draft: false
+---
+
+
+Every now and then I find myself in a situation where I need to create a plot with dual y-axes. However, this seems to happen rarely enough, that I end up frantically googling for advice. Now, creating that secondary y-axis ain't exactly rocket science, but anyone who has been using [ggplot2](https://ggplot2.tidyverse.org/) will tell you that it is not trivial either. To save myself the trouble of having to look for advice in the future, I will show how it can be done with a few simple steps.
+
+
+# Visualizing wind and pressure measurements for a storm
+
+Let's use a  toy example where a dual y-axis plot might be needed. Let's first load the `storms` data that ships with the [dplyr package](https://dplyr.tidyverse.org/reference/storms.html).
+
+```{r}
+#| message: false
+library(tidyverse)
+library(lubridate)
+
+data(storms)
+
+glimpse(storms)
+```
+
+We are dealing with data related to storms. Let's try and see how `wind` and `pressure` develop over time for the `Amy` storm.
+
+```{r}
+#| fig-cap: "Wind speed and air pressure changes for the Amy storm."
+
+# modified data
+mod_storms <- storms %>% 
+  filter(name == "Amy") %>%
+  mutate(date_hour = paste(year,month,day, sep = "-") %>% 
+           paste(., hour, sep = " "), .after = "name") %>% 
+  mutate(date_hour = as_datetime(date_hour, format = "%Y-%m-%d %H"))
+
+theme_set(theme_minimal())
+
+# plot wind and pressure
+mod_storms  %>% 
+  pivot_longer(cols = c("wind", "pressure"), names_to = "phenomenon", values_to = "measurement") %>%
+  ggplot(aes(x = date_hour, y = measurement, lty = phenomenon)) +
+  geom_line() +
+  labs(x = "", y = "Measurement value")
+
+```
+
+Although probably not a perfect example, we can still see that comparing the development of wind and pressure as the storm advances is not very easy from this plot. Also, the y-axis is missing units, which happen to be different for these two measurements.
+
+## Re-organizing the plot via faceting
+
+Let's re-plot the data by using two y-axes. The easiest way to do this with `ggplot2` is by using faceting.
+
+```{r}
+#| fig-cap: "Wind and air pressure changes for the Amy storm divided into two different plots."
+
+# plot wind and pressure
+mod_storms  %>% 
+  pivot_longer(cols = c("wind", "pressure"), names_to = "phenomenon", values_to = "measurement") %>%
+  ggplot(aes(x = date_hour, y = measurement, lty = phenomenon)) +
+  geom_line() +
+  facet_grid(phenomenon ~ ., scales = "free_y") +
+  labs(x = "", y = "Measurement value") +
+  theme(legend.position = "top")
+
+```
+
+The data is now faceted into two separate panes. This let's us scale the y-axes independently, which already makes it easier to see that wind speeds are going up as the pressure is dropping. What we are still missing though, are the units on the y-axis. Let's create one more iteration of this plot.
+
+## Two y-axes
+
+One place to look for inspiration regarding plots is [The R Graph Gallery](https://r-graph-gallery.com/index.html). This wonderful website also has an example for creating [a plot with a dual y-axis](https://r-graph-gallery.com/line-chart-dual-Y-axis-ggplot2.html). Let's walk through the process with our storm data. We'll start by looking at the data we plan to plot.
+
+```{r}
+
+mod_storms %>% 
+  select(date_hour, wind, pressure) %>% 
+  head()
+
+```
+
+We can see that there is quite a difference in the magnitude of the numeric values for `wind` and `pressure`. The approach for creating a secondary y-axis is somewhat artificial, and what we actually need to do is to scale one of the y-axis columns to have a similar range with the other column. Let's start by finding the maximum values for `wind` and `pressure`.
+
+```{r}
+
+max_wind <- max(mod_storms$wind)
+
+max_pressure <- max(mod_storms$pressure)
+
+# scale wind values
+mod_storms2 <- mod_storms %>% 
+  select(date_hour, wind, pressure) %>% 
+  mutate(scaled_wind1 = wind/max_wind,
+         scaled_wind2 = max_pressure*wind/max_wind, .after = wind)
+
+head(mod_storms2)
+```
+
+Now we have scaled the `wind` values to have a maximum value of `1` and also to have the same largest value as the `pressure` values. We could have also scaled the pressure values as well. The choice was arbitrary. Now we can see that the values can be easily plotted on the same scale.
+
+```{r}
+#| fig-cap: "Changes in wind speed and air pressure during the Amy storm. Wind speed values have been scaled to match the maximum air pressure values."
+
+# plot wind and pressure
+mod_storms2  %>% 
+  pivot_longer(cols = c("scaled_wind2", "pressure"), names_to = "phenomenon", values_to = "measurement") %>%
+  ggplot(aes(x = date_hour, y = measurement, lty = phenomenon)) +
+  geom_line() +
+  labs(x = "", y = "Measurement value")
+
+```
+
+Both lines are now sharing the same y-axis. Now all we need to do is to show the wind speed values on the secondary y-axis. However, there is one improvement we can do while we are at it. In the plot above, the wind speed values have been scaled to match the maximum value of air pressure. We can see that for this particular data this is not a great choice, as the relative changes in the data are so different for the two phenomena. We can fix this by changing the scaling so that the range of wind speed values matches the range of air pressure values. 
+
+The secondary y-axis can be introduced by using the `sec_axis()` function. We need to do an inverse scaling for the y-label values to display the original wind speeds.
+
+
+```{r}
+#| fig-cap: "Changes in wind speed (red dashed line) and air pressure (black solid line) during the Amy storm. Wind speed values have been scaled to match the air pressure value range. The labels for the secondary y-axis have undergone inverse scaling to show the unchanged wind speed values."
+
+# rescale wind data between min and max of pressure
+min_pressure <- min(mod_storms$pressure)
+min_wind <- min(mod_storms$wind)
+
+# scale wind values
+mod_storms2 <- mod_storms %>% 
+  select(date_hour, wind, pressure) %>% 
+  mutate(scaled_wind1 = (wind - min_wind)/(max_wind  - min_wind),
+         scaled_wind2 = (max_pressure - min_pressure) * scaled_wind1 + min_pressure, .after = wind)
+
+
+mod_storms2  %>% 
+  ggplot(aes(x = date_hour)) +
+  geom_line(aes(y = pressure)) + 
+  geom_line(aes(y =  scaled_wind2), lty = 2, color = "red") + 
+  scale_y_continuous(
+    # Features of the first axis
+    name = "Pressure (mbar)",
+    # Add a second axis and specify its features
+    sec.axis = sec_axis(
+        # inverse transformation of scaled wind speeds for secondary y-axis
+      ~ (. - min_pressure)*(max_wind - min_wind)/(max_pressure - min_pressure) + min_wind, 
+      name = "Wind speed (knots)"
+      )
+  ) +
+  labs(x = element_blank())
+```
+
+Now we can see both lines plotted in the same graph, and we have an individual y-axis to show independent values and units for the two phenomena. This makes it easy to compare the lines.
+
+# Final thoughts
+
+Now, it is good to keep in mind that this type of a plot may be misleading at times. For example here, the relative changes for the two phenomena are quite different, which is not apparent at a first glance of the above plot. So best be mindful when to use this type of a plot. As a rule of thumb, I would say that usually faceting will do the trick. That being said, in my opinion there is a time and a place for a dual y-axis as well. So it is good to know how to do it.
