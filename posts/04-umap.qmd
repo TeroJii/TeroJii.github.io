@@ -1,0 +1,47 @@
+---
+title: "Dimensionality reduction with Uniform Manifold Approximation and Projection"
+date: "2023-02-07"
+categories: [dimensionality reduction, UMAP, EDA]
+description: 'Using UMAP with R'
+draft: true
+---
+
+Uniform Manifold Approximation and Projection, [UMAP](https://arxiv.org/abs/1802.03426) for short, is algorithm which can be used to reduce the number of dimensions in a data set. Two packages [umap](https://cran.r-project.org/web/packages/umap/vignettes/umap.html) and [uwot](https://cran.r-project.org/web/packages/uwot/index.html), which seems to be used by {tidymodels}.
+
+
+## Using the built-in data `swiss`
+
+Let's explore the use of UMAP and PCA by using the built-in `swiss` data.
+
+```{r}
+# load the built-in data
+data(swiss)
+
+head(swiss)
+```
+
+ ### Dimensionality reduction via PCA
+ 
+```{r}
+library(tidyverse)
+theme_set(theme_minimal())
+
+# Perform PCA
+pca.out <- prcomp(swiss, scale. = TRUE)
+
+municipalities <- row.names(pca.out$x) %>% 
+  as_tibble() %>% 
+  rename(municipality = value)
+# visualize first two principal components
+pca.out$x %>% 
+  as_tibble() %>% 
+  bind_cols(municipalities) %>% 
+  ggplot(aes(x = PC1, y = PC2, label = municipality)) +
+    geom_point() +
+    geom_text(check_overlap = TRUE)
+
+```
+ 
+
+
+Julia Silge has a nice [blog post](https://juliasilge.com/blog/cocktail-recipes-umap/) comparing the use of PCA and UMAP via the tidymodels approach.
