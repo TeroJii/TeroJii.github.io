@@ -1,7 +1,7 @@
 ---
 title: "Dimensionality reduction with Uniform Manifold Approximation and Projection"
 date: "2023-02-07"
-categories: [dimensionality reduction, UMAP, EDA]
+categories: [dimensionality reduction, UMAP]
 description: 'Using UMAP with R'
 draft: true
 ---
@@ -13,23 +13,23 @@ Uniform Manifold Approximation and Projection, [UMAP](https://arxiv.org/abs/1802
 Let's test drive both UMAP and PCA by using the built-in `swiss` data, which contains different numeric indicators for 47 Swiss municipalities.
 
 ```{r}
+library(tidyverse)
+theme_set(theme_minimal())
+
 # load the built-in data
 data(swiss)
 
-head(swiss)
+glimpse(swiss)
 ```
 
 We can condense the variability found in the data into smaller dimensions by using PCA. Let's see how.
 
-### Dimensionality reduction via PCA
+## Dimensionality reduction via PCA
 
 There are many packages for performing PCA in R. For example, the {stats} package has the `prcomp` function. Let's use it, and visualize the first two principal components.
  
 ```{r}
 #| fig-cap: "The first two principal components of the `swiss` data."
-
-library(tidyverse)
-theme_set(theme_minimal())
 
 # Perform PCA
 pca.out <- prcomp(swiss, scale. = TRUE)
@@ -96,7 +96,7 @@ pca_mod$x %>%
 
 We can see that the numeric columns provide some degree of separation between the high and low fertility municipalities.
 
-### Dimensionality reduction with UMAP
+## Dimensionality reduction with UMAP
 
 Let's try the `umap` function on the modified `swiss` data to see what we get as output.
 
@@ -117,7 +117,7 @@ umap.out$layout %>%
   bind_cols(select(swiss_mod, fert_class)) %>% 
   ggplot(aes(x = UMAP1, y = UMAP2, label = municipality, color = fert_class)) +
   geom_point() +
-  geom_text(check_overlap = TRUE) +
+  geom_text(check_overlap = TRUE, nudge_y = -0.1) +
   ggtitle("UMAP output") +
   scale_color_manual(values = brewer.pal(n = 3, "Pastel1"))  +
   labs(color = "Fertility:")
@@ -129,9 +129,14 @@ We can see that the output from UMAP is somewhat different from PCA. The observa
 It is good to understand that the UMAP algorithm contains a random element, which means that the output of the algorithm differs slightly depending on the random seed. Let's test this by running the calculations again with a different seed.
 
 ```{r}
-#| fig-cap: "Re-calculated UMAP components with a different random seed."
-
 set.seed(345)
+
+```
+
+
+```{r}
+#| fig-cap: "Re-calculated UMAP components with a different random seed."
+#| echo: false
 
 # re-calculate UMAP for the data
 umap.out <- umap(select(swiss_mod, -fert_class))
@@ -144,29 +149,33 @@ umap.out$layout %>%
   bind_cols(select(swiss_mod, fert_class)) %>% 
   ggplot(aes(x = UMAP1, y = UMAP2, label = municipality, color = fert_class)) +
   geom_point() +
-  geom_text(check_overlap = TRUE) +
-  ggtitle("UMAP output") +
+  geom_text(check_overlap = TRUE, nudge_y = -0.1) +
+  ggtitle("UMAP output", subtitle = "With a different random seed") +
   scale_color_manual(values = brewer.pal(n = 3, "Pastel1")) +
   labs(color = "Fertility:")
 
 ```
 
-We notice that the output is quite similar, but slightly different. There are actually quite a few arguments we can feed to the `umap` function. The default values are listed under `umap.defaults`. Let's take a look.
+We notice that the output is quite similar, but still slightly different. There are actually quite a few arguments we can feed to the `umap` function. The default values are listed under `umap.defaults`. Let's take a look.
 
 ```{r}
 umap.defaults
 ```
 
-By changing these default values we can affect the output quite a bit. Let's see what happens when we change the default number of components and nearest neighbors.
+By changing these default values we can affect the output. Let's see what happens when we change the default number of components and nearest neighbors.
 
 ```{r}
-#| fig-cap: "Re-calculated first and second UMAP components with a different random seed, more components and smaller number of nearest neighbors."
-
 # re-calculate UMAP for the data
 umap.out <- umap(select(swiss_mod, -fert_class),
                  n_components = 4, 
                  random_state = 333,
                  n_neighbors = 5)
+```
+
+
+```{r}
+#| fig-cap: "Re-calculated first and second UMAP components with a different random seed, more components and smaller number of nearest neighbors."
+#| echo: false
 
 #plot output
 umap.out$layout %>% 
@@ -176,19 +185,18 @@ umap.out$layout %>%
   bind_cols(select(swiss_mod, fert_class)) %>% 
   ggplot(aes(x = UMAP1, y = UMAP2, label = municipality, color = fert_class)) +
   geom_point() +
-  geom_text(check_overlap = TRUE) +
-  ggtitle("UMAP output") +
+  geom_text(check_overlap = TRUE, nudge_y = -0.1) +
+  ggtitle("UMAP output",
+          subtitle = "With modified parameters") +
   scale_color_manual(values = brewer.pal(n = 3, "Pastel1")) +
   labs(color = "Fertility:")
 
 ```
 
-Now the output resembles more the one we got by using PCA. The  [original article on UMAP](https://arxiv.org/pdf/1802.03426.pdf) goes into finer detail with regards to the effects of hyperparameter tuning, but we can certainly see that we can affect the output quite significantly. 
+Now the output resembles more the one we got by using PCA. The  [original article on UMAP](https://arxiv.org/pdf/1802.03426.pdf) goes into finer detail with regards to the effects of hyperparameter tuning, but we can certainly see that we can tune the output significantly. 
 
+# Final thoughts
 
-<!---
-## Using {tidymodels} for UMAP
+The {umap} package makes it easy to use UMAP in R. Although we barely scratched the surface here, it was interesting to see how UMAP gives different outputs compared to PCA.
 
-There is another package in R called [uwot](https://cran.r-project.org/web/packages/uwot/index.html), which provides a slightly different implementation of UMAP. This package also seems to be used by {tidymodels}. Julia Silge has a nice [blog post](https://juliasilge.com/blog/cocktail-recipes-umap/) which compares the use of PCA and UMAP in the {tidymodels} setting.
-
---->
+If you are interested in using UMAP as a part of your modeling pipeline, you can also find it from [tidymodels](https://www.tmwr.org/dimensionality.html). Julia Silge has a nice [blog post](https://juliasilge.com/blog/cocktail-recipes-umap/) comparing the use of PCA and UMAP when using {tidymodels}.
