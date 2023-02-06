@@ -55,6 +55,7 @@ Now this example is somewhat artificial, and does not make much sense beyond tes
 ```{r}
 #| fig-cap: "A histogram of fertility values in the swiss data."
 #| warning: false
+#| echo: false
 library(RColorBrewer)
 
 swiss %>% 
@@ -88,7 +89,8 @@ pca_mod$x %>%
   geom_point() +
   geom_text(check_overlap = TRUE, nudge_y = -0.1) +
   ggtitle("PCA output", subtitle = "Fertility divided into two classes") +
-  scale_color_manual(values = brewer.pal(n = 3, "Pastel1"))
+  scale_color_manual(values = brewer.pal(n = 3, "Pastel1")) +
+  labs(color = "Fertility:")
 
 ```
 
@@ -96,17 +98,18 @@ We can see that the numeric columns provide some degree of separation between th
 
 ### Dimensionality reduction with UMAP
 
-Let's try the same with UMAP.
+Let's try the `umap` function on the modified `swiss` data to see what we get as output.
 
 ```{r}
 #| fig-cap: "The first two UMAP components for the modified `swiss` data."
 
 library(umap)
+set.seed(123)
 
 # calculate UMAP for the data
 umap.out <- umap(select(swiss_mod, -fert_class))
 
-#plot
+# plot the two UMAP components
 umap.out$layout %>% 
   as.data.frame() %>% 
   rename(UMAP1 = V1, UMAP2 = V2) %>% 
@@ -116,11 +119,76 @@ umap.out$layout %>%
   geom_point() +
   geom_text(check_overlap = TRUE) +
   ggtitle("UMAP output") +
-  scale_color_manual(values = brewer.pal(n = 3, "Pastel1"))
+  scale_color_manual(values = brewer.pal(n = 3, "Pastel1"))  +
+  labs(color = "Fertility:")
 
 ```
 
+We can see that the output from UMAP is somewhat different from PCA. The observations are clearly divided into two clusters. The clusters do not seem to fully overlap with the Fertility classes we constructed.
 
+It is good to understand that the UMAP algorithm contains a random element, which means that the output of the algorithm differs slightly depending on the random seed. Let's test this by running the calculations again with a different seed.
+
+```{r}
+#| fig-cap: "Re-calculated UMAP components with a different random seed."
+
+set.seed(345)
+
+# re-calculate UMAP for the data
+umap.out <- umap(select(swiss_mod, -fert_class))
+
+#plot output
+umap.out$layout %>% 
+  as.data.frame() %>% 
+  rename(UMAP1 = V1, UMAP2 = V2) %>% 
+  bind_cols(municipalities) %>% 
+  bind_cols(select(swiss_mod, fert_class)) %>% 
+  ggplot(aes(x = UMAP1, y = UMAP2, label = municipality, color = fert_class)) +
+  geom_point() +
+  geom_text(check_overlap = TRUE) +
+  ggtitle("UMAP output") +
+  scale_color_manual(values = brewer.pal(n = 3, "Pastel1")) +
+  labs(color = "Fertility:")
+
+```
+
+We notice that the output is quite similar, but slightly different. There are actually quite a few arguments we can feed to the `umap` function. The default values are listed under `umap.defaults`. Let's take a look.
+
+```{r}
+umap.defaults
+```
+
+By changing these default values we can affect the output quite a bit. Let's see what happens when we change the default number of components and nearest neighbors.
+
+```{r}
+#| fig-cap: "Re-calculated first and second UMAP components with a different random seed, more components and smaller number of nearest neighbors."
+
+# re-calculate UMAP for the data
+umap.out <- umap(select(swiss_mod, -fert_class),
+                 n_components = 4, 
+                 random_state = 333,
+                 n_neighbors = 5)
+
+#plot output
+umap.out$layout %>% 
+  as.data.frame() %>% 
+  rename(UMAP1 = V1, UMAP2 = V2) %>% 
+  bind_cols(municipalities) %>% 
+  bind_cols(select(swiss_mod, fert_class)) %>% 
+  ggplot(aes(x = UMAP1, y = UMAP2, label = municipality, color = fert_class)) +
+  geom_point() +
+  geom_text(check_overlap = TRUE) +
+  ggtitle("UMAP output") +
+  scale_color_manual(values = brewer.pal(n = 3, "Pastel1")) +
+  labs(color = "Fertility:")
+
+```
+
+Now the output resembles more the one we got by using PCA. The  [original article on UMAP](https://arxiv.org/pdf/1802.03426.pdf) goes into finer detail with regards to the effects of hyperparameter tuning, but we can certainly see that we can affect the output quite significantly. 
+
+
+<!---
 ## Using {tidymodels} for UMAP
 
 There is another package in R called [uwot](https://cran.r-project.org/web/packages/uwot/index.html), which provides a slightly different implementation of UMAP. This package also seems to be used by {tidymodels}. Julia Silge has a nice [blog post](https://juliasilge.com/blog/cocktail-recipes-umap/) which compares the use of PCA and UMAP in the {tidymodels} setting.
+
+--->
