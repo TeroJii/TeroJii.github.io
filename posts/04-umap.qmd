@@ -6,12 +6,12 @@ description: 'Using UMAP with R'
 draft: true
 ---
 
-Uniform Manifold Approximation and Projection, [UMAP](https://arxiv.org/abs/1802.03426) for short, is algorithm which can be used to reduce the number of dimensions in a data set. Two packages [umap](https://cran.r-project.org/web/packages/umap/vignettes/umap.html) and [uwot](https://cran.r-project.org/web/packages/uwot/index.html), which seems to be used by {tidymodels}.
+Uniform Manifold Approximation and Projection, [UMAP](https://arxiv.org/abs/1802.03426) for short, is algorithm which can be used to reduce the number of dimensions in a data set. The [umap](https://cran.r-project.org/web/packages/umap/vignettes/umap.html) package provides means for using UMAP with R.
 
 
 ## Using the built-in data `swiss`
 
-Let's explore the use of UMAP and PCA by using the built-in `swiss` data.
+Let's explore the use of UMAP and PCA by using the built-in `swiss` data, which contains different numeric indicators for 47 Swiss municipalities.
 
 ```{r}
 # load the built-in data
@@ -20,7 +20,10 @@ data(swiss)
 head(swiss)
 ```
 
- ### Dimensionality reduction via PCA
+
+### Dimensionality reduction via PCA
+
+Principal component analysis (PCA)
  
 ```{r}
 library(tidyverse)
@@ -37,11 +40,35 @@ pca.out$x %>%
   as_tibble() %>% 
   bind_cols(municipalities) %>% 
   ggplot(aes(x = PC1, y = PC2, label = municipality)) +
-    geom_point() +
-    geom_text(check_overlap = TRUE)
+  geom_point() +
+  geom_text(check_overlap = TRUE) +
+  ggtitle("PCA output")
 
 ```
  
+### Dimensionality reduction with UMAP
+
+Let's try the same with UMAP.
+
+```{r}
+library(umap)
+
+# calculate UMAP for the data
+umap.out <- umap(swiss)
+
+#plot
+umap.out$layout %>% 
+  as_tibble() %>% 
+  rename(PC1 = V1, PC2 = V2) %>% 
+  bind_cols(municipalities) %>% 
+  ggplot(aes(x = PC1, y = PC2, label = municipality)) +
+  geom_point() +
+  geom_text(check_overlap = TRUE) +
+  ggtitle("UMAP output")
+
+```
 
 
-Julia Silge has a nice [blog post](https://juliasilge.com/blog/cocktail-recipes-umap/) comparing the use of PCA and UMAP via the tidymodels approach.
+## Using {tidymodels} for UMAP
+
+There is another package in R called [uwot](https://cran.r-project.org/web/packages/uwot/index.html), which provides a slightly different implementation of UMAP. This package also seems to be used by {tidymodels}. Julia Silge has a nice [blog post](https://juliasilge.com/blog/cocktail-recipes-umap/) which compares the use of PCA and UMAP in the {tidymodels} setting.
