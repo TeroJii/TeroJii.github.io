@@ -6,12 +6,11 @@ description: 'Using UMAP with R'
 draft: true
 ---
 
-Uniform Manifold Approximation and Projection, [UMAP](https://arxiv.org/abs/1802.03426) for short, is algorithm which can be used to reduce the number of dimensions in a data set. The [umap](https://cran.r-project.org/web/packages/umap/vignettes/umap.html) package provides means for using UMAP with R.
-
+Uniform Manifold Approximation and Projection, [UMAP](https://arxiv.org/abs/1802.03426) for short, is a method which can be used to reduce the number of dimensions in a data set. Dimensionality reduction methods can be very useful when you are dealing with a large number of features, and can help mitigate issues such as multicollinearity. The [umap](https://cran.r-project.org/web/packages/umap/vignettes/umap.html) package provides means for using UMAP with R. Let's explore the use of UMAP a bit and compare it to another dimensionality reduction technique, Principal Component Analysis (PCA).
 
 ## Using the built-in data `swiss`
 
-Let's explore the use of UMAP and PCA by using the built-in `swiss` data, which contains different numeric indicators for 47 Swiss municipalities.
+Let's test drive both UMAP and PCA by using the built-in `swiss` data, which contains different numeric indicators for 47 Swiss municipalities.
 
 ```{r}
 # load the built-in data
@@ -20,51 +19,104 @@ data(swiss)
 head(swiss)
 ```
 
+We can condense the variability found in the data into smaller dimensions by using PCA. Let's see how.
 
 ### Dimensionality reduction via PCA
 
-Principal component analysis (PCA)
+There are many packages for performing PCA in R. For example, the {stats} package has the `prcomp` function. Let's use it, and visualize the first two principal components.
  
 ```{r}
+#| fig-cap: "The first two principal components of the `swiss` data."
+
 library(tidyverse)
 theme_set(theme_minimal())
 
 # Perform PCA
 pca.out <- prcomp(swiss, scale. = TRUE)
 
+# record names of municipalities into a tibble
 municipalities <- row.names(pca.out$x) %>% 
   as_tibble() %>% 
   rename(municipality = value)
+
 # visualize first two principal components
 pca.out$x %>% 
   as_tibble() %>% 
   bind_cols(municipalities) %>% 
   ggplot(aes(x = PC1, y = PC2, label = municipality)) +
   geom_point() +
-  geom_text(check_overlap = TRUE) +
+  geom_text(check_overlap = TRUE, nudge_y = -0.1) +
   ggtitle("PCA output")
 
 ```
- 
+
+Now this example is somewhat artificial, and does not make much sense beyond testing PCA output. In a more pragmatic setting we might be interested, for example, if some numeric features help us to classify the observations into different classes. Here, we might want to know if the other numeric indicators in the data are connected to `Fertility`.
+
+```{r}
+#| fig-cap: "A histogram of fertility values in the swiss data."
+#| warning: false
+library(RColorBrewer)
+
+swiss %>% 
+  ggplot(aes(x = Fertility, fill = Fertility > 70)) +
+  geom_histogram(color = "black", 
+                 binwidth = 5) +
+  scale_x_continuous(limits = c(30,100)) +
+  scale_fill_manual(values = brewer.pal(n = 3, "Pastel1"))
+
+```
+
+Let's define `70` as the limit of high fertility and label municipalities above this threshold as `High`. This choice divides the observations into two approximately equal sized groups, but other than that is completely random. Let's re-try PCA with the remaining numeric columns.
+
+```{r}
+#| fig-cap: "The first two principal components of the modified `swiss` data. Municipalities are marked as having High fertility if the numeric value exceeds 70."
+
+# modified data with fertility classes
+swiss_mod <- swiss %>% 
+  mutate(fert_class = if_else(Fertility > 70, true = "High", false = "Low")) %>% 
+  select(-Fertility)
+
+# PCA without the Fertility column
+pca_mod <- prcomp(select(swiss_mod, -fert_class), scale. = TRUE)
+
+# visualize first two principal components for the modified data
+pca_mod$x %>% 
+  as_tibble() %>% 
+  bind_cols(municipalities) %>% 
+  bind_cols(select(swiss_mod, fert_class)) %>% 
+  ggplot(aes(x = PC1, y = PC2, label = municipality, color = fert_class)) +
+  geom_point() +
+  geom_text(check_overlap = TRUE, nudge_y = -0.1) +
+  ggtitle("PCA output", subtitle = "Fertility divided into two classes") +
+  scale_color_manual(values = brewer.pal(n = 3, "Pastel1"))
+
+```
+
+We can see that the numeric columns provide some degree of separation between the high and low fertility municipalities.
+
 ### Dimensionality reduction with UMAP
 
 Let's try the same with UMAP.
 
 ```{r}
+#| fig-cap: "The first two UMAP components for the modified `swiss` data."
+
 library(umap)
 
 # calculate UMAP for the data
-umap.out <- umap(swiss)
+umap.out <- umap(select(swiss_mod, -fert_class))
 
 #plot
 umap.out$layout %>% 
-  as_tibble() %>% 
-  rename(PC1 = V1, PC2 = V2) %>% 
+  as.data.frame() %>% 
+  rename(UMAP1 = V1, UMAP2 = V2) %>% 
   bind_cols(municipalities) %>% 
-  ggplot(aes(x = PC1, y = PC2, label = municipality)) +
+  bind_cols(select(swiss_mod, fert_class)) %>% 
+  ggplot(aes(x = UMAP1, y = UMAP2, label = municipality, color = fert_class)) +
   geom_point() +
   geom_text(check_overlap = TRUE) +
-  ggtitle("UMAP output")
+  ggtitle("UMAP output") +
+  scale_color_manual(values = brewer.pal(n = 3, "Pastel1"))
 
 ```
 
