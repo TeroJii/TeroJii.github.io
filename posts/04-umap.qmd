@@ -3,7 +3,7 @@ title: "Dimensionality reduction with Uniform Manifold Approximation and Project
 date: "2023-02-07"
 categories: [dimensionality reduction, UMAP, PCA]
 description: 'Using UMAP with R'
-draft: true
+draft: false
 ---
 
 Uniform Manifold Approximation and Projection, [UMAP](https://arxiv.org/abs/1802.03426) for short, is a method which can be used to reduce the number of dimensions in a data set. Dimensionality reduction methods can be very useful when you are dealing with a large number of features, and can help mitigate issues such as multicollinearity. Personally I like to use them during exploratory data analysis. The [umap](https://cran.r-project.org/web/packages/umap/vignettes/umap.html) package provides means for using UMAP with R. Let's explore the use of UMAP a bit and compare it to another dimensionality reduction technique, Principal Component Analysis (PCA).
@@ -124,7 +124,7 @@ umap.out$layout %>%
 
 ```
 
-We can see that the output from UMAP is somewhat different from PCA. The observations are clearly divided into two clusters. The clusters do not seem to fully overlap with the Fertility classes we constructed.
+We can see that the output from UMAP is somewhat different. The observations are more clearly divided into two clusters. The clusters do not seem to fully overlap with the Fertility classes we constructed.
 
 It is good to understand that the UMAP algorithm contains a random element, which means that the output of the algorithm differs slightly depending on the random seed. Let's test this by running the calculations again with a different seed.
 
@@ -193,10 +193,10 @@ umap.out$layout %>%
 
 ```
 
-Now the output resembles more the one we got by using PCA. The  [original article on UMAP](https://arxiv.org/pdf/1802.03426.pdf) goes into finer detail with regards to the effects of hyperparameter tuning, but we can certainly see that we can tune the output significantly. 
+Now the output resembles more the one we got by using PCA. The [original article on UMAP](https://arxiv.org/pdf/1802.03426.pdf) goes into finer detail with regards to the effects of hyperparameter tuning, but we can certainly see that we can tune the output significantly. 
 
 # Final thoughts
 
-The {umap} package makes it easy to use UMAP in R. Although we barely scratched the surface here, it was interesting to see how UMAP gives different outputs compared to PCA.
+The {umap} package makes it easy to use UMAP in R. Although we barely scratched the surface here, we were able to see how UMAP gives different outputs compared to PCA.
 
-If you are interested in using UMAP as a part of your modeling pipeline, you can also find it from [tidymodels](https://www.tmwr.org/dimensionality.html). Julia Silge has a nice [blog post](https://juliasilge.com/blog/cocktail-recipes-umap/) comparing the use of PCA and UMAP when using {tidymodels}.
+If you are interested in using UMAP as a part of your modeling pipeline, you can also find it from [tidymodels](https://www.tmwr.org/dimensionality.html). Julia Silge has a nice [blog post](https://juliasilge.com/blog/cocktail-recipes-umap/) comparing the use of PCA and UMAP in this setting.
