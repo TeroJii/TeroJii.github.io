@@ -1,12 +1,12 @@
 ---
 title: "Dimensionality reduction with Uniform Manifold Approximation and Projection"
 date: "2023-02-07"
-categories: [dimensionality reduction, UMAP]
+categories: [dimensionality reduction, UMAP, PCA]
 description: 'Using UMAP with R'
 draft: true
 ---
 
-Uniform Manifold Approximation and Projection, [UMAP](https://arxiv.org/abs/1802.03426) for short, is a method which can be used to reduce the number of dimensions in a data set. Dimensionality reduction methods can be very useful when you are dealing with a large number of features, and can help mitigate issues such as multicollinearity. The [umap](https://cran.r-project.org/web/packages/umap/vignettes/umap.html) package provides means for using UMAP with R. Let's explore the use of UMAP a bit and compare it to another dimensionality reduction technique, Principal Component Analysis (PCA).
+Uniform Manifold Approximation and Projection, [UMAP](https://arxiv.org/abs/1802.03426) for short, is a method which can be used to reduce the number of dimensions in a data set. Dimensionality reduction methods can be very useful when you are dealing with a large number of features, and can help mitigate issues such as multicollinearity. Personally I like to use them during exploratory data analysis. The [umap](https://cran.r-project.org/web/packages/umap/vignettes/umap.html) package provides means for using UMAP with R. Let's explore the use of UMAP a bit and compare it to another dimensionality reduction technique, Principal Component Analysis (PCA).
 
 ## Using the built-in data `swiss`
 
@@ -50,7 +50,7 @@ pca.out$x %>%
 
 ```
 
-Now this example is somewhat artificial, and does not make much sense beyond testing PCA output. In a more pragmatic setting we might be interested, for example, if some numeric features help us to classify the observations into different classes. Here, we might want to know if the other numeric indicators in the data are connected to `Fertility`.
+From the plot above we can see which municipalities share similarities based on the data. That being said, this example is somewhat artificial, and does not make much sense beyond testing PCA output. In a more pragmatic setting, we might be interested, for example, if some numeric features help us to classify the observations into different classes. Here, we might want to know if the other numeric indicators in the data are connected to e.g. `Fertility`.
 
 ```{r}
 #| fig-cap: "A histogram of fertility values in the swiss data."
@@ -67,7 +67,7 @@ swiss %>%
 
 ```
 
-Let's define `70` as the limit of high fertility and label municipalities above this threshold as `High`. This choice divides the observations into two approximately equal sized groups, but other than that is completely random. Let's re-try PCA with the remaining numeric columns.
+Let's define `70` as the limit of high fertility and label municipalities above this threshold as `High`. This choice divides the observations into two approximately equal sized groups, but other than that is completely arbitrary. Let's re-try PCA with the remaining numeric columns.
 
 ```{r}
 #| fig-cap: "The first two principal components of the modified `swiss` data. Municipalities are marked as having High fertility if the numeric value exceeds 70."
