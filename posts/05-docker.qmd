@@ -12,6 +12,11 @@ What is Docker? Docker provides a way to run your Shiny app inside something cal
 
 Sounds great. Let's see what is needed for setting your Shiny app to run inside a container.
 
+## Installing Docker
+
+The installation depends on your operating system, but the installation should be easy enough for Mac OS, Windows, and Linux as well. [The website](https://www.docker.com/products/docker-desktop/) has detailed instructions to guide you through the process.
+
+### Installation for Windows
 ## Building a docker image
 
 ## Installing R packages
