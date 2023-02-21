@@ -9,3 +9,15 @@ draft: true
 [Shiny apps](https://shiny.rstudio.com/) are a great way to provide an interactive user interface for exploring data, running models or simulations, and much more. However, writing a Shiny app on your local computer is one thing, but providing it to a customer or colleague in a scalable way requires something more. Enter [Docker](https://www.docker.com/).
 
 What is Docker? Docker provides a way to run your Shiny app inside something called a *container*, which is basically a virtual environment ([read more here](https://www.docker.com/resources/what-container/)). This allows you to share your app via Cloud providers such as AWS and Azure. You can also run the containers on a local machine, without needing to worry about R installations etc.
+
+Sounds great. Let's see what is needed for setting your Shiny app to run inside a container.
+
+## Building a docker image
+
+## Installing R packages
+
+### Installing custom R packages
+
+## Running your container locally
+
+## Using batch-files for launching a container
