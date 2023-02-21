@@ -17,7 +17,12 @@ Sounds great. Let's see what is needed for setting your Shiny app to run inside 
 The installation depends on your operating system, but the installation should be easy enough for Mac OS, Windows, and Linux as well. [The website](https://www.docker.com/products/docker-desktop/) has detailed instructions to guide you through the process.
 
 ### Installation for Windows
+
+For Windows you will basically need an application called Docker Desktop. The requirements needed for running this application are listed [here](https://docs.docker.com/desktop/install/windows-install/). For Windows versions 10/11, you will basically need to install WSL 2 to run docker. Look at the link above for detailed instructions.
+
 ## Building a docker image
+
+Now that Docker is up and running
 
 ## Installing R packages
 
@@ -26,3 +31,7 @@ The installation depends on your operating system, but the installation should b
 ## Running your container locally
 
 ## Using batch-files for launching a container
+
+## Final thoughts
+
+Joe Torres has a blog post detailing the steps needed for using Azure App service to [host your Shiny app](https://joetorres531.medium.com/build-an-enterprise-ready-r-shiny-app-with-azure-and-docker-a87c73028d97).
