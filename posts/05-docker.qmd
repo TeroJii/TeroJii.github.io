@@ -30,7 +30,7 @@ Ok, let's build a docker image on top of an existing rocker image. You need to d
 
 2) Write the following commands to the Dockerfile and save it:
 
-```{}
+```
 FROM rocker/shiny-verse:latest
 
 COPY /app /srv/shiny-server/
@@ -40,7 +40,7 @@ EXPOSE 3838
 
 3) Navigate to the folder where your `Dockerfile` is located with the terminal and build the image based on the `Dockerfile`:
 
-```{}
+```
 docker build --tag my-app:latest .
 ```
 
@@ -51,11 +51,26 @@ Let's take a closer look at the contents of that `Dockerfile` and what is actual
 
 Now if we wish to run a container based on the image locally on our computer, we can do so with the following command:
 
-```{}
+```
 docker run -p 3838:3838 -d --rm --name mycontainer my-app:latest
 ```
 
-You should now find your app by visiting `localhost:3838` on your web browser.
+You should now find your containerized Shiny app by visiting `localhost:3838` on your web browser.
+
+```{r}
+#| fig-cap: "Shiny app running locally inside a container."
+#| eval: false
+plot(1:4)
+```
+
+
+Once you are done using the app you can shutdown the container with:
+
+```
+docker stop mycontainer
+```
+
+This will also remove the container since we used the `--rm` flag when starting the container.
 
 ## Installing R packages
 
