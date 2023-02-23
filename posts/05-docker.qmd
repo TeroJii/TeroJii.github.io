@@ -20,20 +20,50 @@ The installation depends on your operating system, but the installation should b
 
 The most convenient way for running docker on Windows in by installing Docker Desktop. The requirements needed for running this application are listed [here](https://docs.docker.com/desktop/install/windows-install/). For Windows versions 10/11, you will basically need to install WSL 2 to run docker. Look at the link above for detailed instructions.
 
-## Building a docker image
+## Building a Docker image
 
-Now that Docker is up and running we need to create a `Dockerfile` for building a docker image of our Shiny app. What is an image then? Image is basically a blueprint for your container. It tells what code should run inside the container, and which dependencies the code has. Luckily we do not need to specify all this from zero, but we can build on top of existing images. There are thousands of images readily available in Docker Hub. For R users, several useful images are listed under [rocker](https://hub.docker.com/u/rocker).
+Now that Docker is up and running we need to create a `Dockerfile` for building a Docker image of our Shiny app. What is an image then? Image is basically a blueprint for your container. It tells what code should run inside the container, and which dependencies the code has. Luckily we do not need to specify all this from zero, but we can build on top of existing images. There are thousands of images readily available in Docker Hub. For R users, several useful images are listed under [rocker](https://hub.docker.com/u/rocker).
+
+Ok, let's build a docker image on top of an existing rocker image. You need to do three things:
+
+1) Create an empty file called `Dockerfile` to the folder that contains your Shiny app.
+
+2) Write the following commands to the Dockerfile and save it:
 
 ```{}
 FROM rocker/shiny-verse:latest
+
+COPY /app /srv/shiny-server/
+
+EXPOSE 3838
 ```
 
+3) Navigate to the folder where your `Dockerfile` is located with the terminal and build the image based on the `Dockerfile`:
+
+```{}
+docker build --tag my-app:latest .
+```
+
+For phase 3), you can use the Command Prompt, or the Terminal which is available in either RStudio or Visual Studio Code. The advantage of using a built-in terminal from e.g. Visual Studio Code is that the terminal prompt is already opened in your working directory where you have Dockerfile. Visual Studio Code also provides help for writing Dockerfiles via the Docker extension.
+
+
+Let's take a closer look at the contents of that `Dockerfile` and what is actually happening. The first line of code tells Docker to build the image on top of a pre-existing image called `rocker/shiny-verse`. If that is not available locally, then Docker will search and pull the image from Docker Hub. The next line of code tells Docker to copy the contents of the local `app` folder on your computer inside the Docker image. There it will place the contents under `./srv/shiny-server/`. The `app` folder should contain all the code for your Shiny app. The last line of code declares that port 3838 of the container created based on this image should be exposed to the outside environment.
+
+Now if we wish to run a container based on the image locally on our computer, we can do so with the following command:
+
+```{}
+docker run -p 3838:3838 -d --rm --name mycontainer my-app:latest
+```
+
+You should now find your app by visiting `localhost:3838` on your web browser.
 
 ## Installing R packages
 
-### Installing custom R packages
+For example the `rocker/shiny-verse` image already includes many R-packages which have been installed. You can see information on different rocker images and their contents [here](https://github.com/rocker-org/rocker-versioned2/wiki).
 
-## Running your container locally
+
+
+### Installing custom R packages
 
 ## Using batch-files for launching a container
 
