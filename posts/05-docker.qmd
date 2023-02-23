@@ -1,5 +1,5 @@
 ---
-title: "Using Docker for Your Shiny Apps"
+title: "Using Docker for Shiny Apps"
 date: "2023-02-28"
 categories: [Docker, Shiny]
 description: 'Containerizing your Shiny apps'
@@ -8,7 +8,7 @@ draft: true
 
 [Shiny apps](https://shiny.rstudio.com/) are a great way to provide an interactive user interface for exploring data, running models or simulations, and much more. However, writing a Shiny app on your local computer is one thing, but providing it to a customer or colleague in a scalable way requires something more. Enter [Docker](https://www.docker.com/).
 
-What is Docker? Docker provides a way to run your Shiny app inside something called a *container*, which is basically a virtual environment ([read more here](https://www.docker.com/resources/what-container/)). This allows you to share your app via Cloud providers such as AWS and Azure. You can also run the containers on a local machine, without needing to worry about R installations etc.
+What is Docker? Docker provides a way to run your Shiny app inside something called a *container*, which is basically a virtual environment ([read more here](https://www.docker.com/resources/what-container/)). This allows you to share your app via Cloud providers such as AWS and Azure. You can also run the containers on a local machine, without needing to worry about R installations and other dependencies.
 
 Sounds great. Let's see what is needed for setting your Shiny app to run inside a container.
 
@@ -18,11 +18,16 @@ The installation depends on your operating system, but the installation should b
 
 ### Installation for Windows
 
-For Windows you will basically need an application called Docker Desktop. The requirements needed for running this application are listed [here](https://docs.docker.com/desktop/install/windows-install/). For Windows versions 10/11, you will basically need to install WSL 2 to run docker. Look at the link above for detailed instructions.
+The most convenient way for running docker on Windows in by installing Docker Desktop. The requirements needed for running this application are listed [here](https://docs.docker.com/desktop/install/windows-install/). For Windows versions 10/11, you will basically need to install WSL 2 to run docker. Look at the link above for detailed instructions.
 
 ## Building a docker image
 
-Now that Docker is up and running
+Now that Docker is up and running we need to create a `Dockerfile` for building a docker image of our Shiny app. What is an image then? Image is basically a blueprint for your container. It tells what code should run inside the container, and which dependencies the code has. Luckily we do not need to specify all this from zero, but we can build on top of existing images. There are thousands of images readily available in Docker Hub. For R users, several useful images are listed under [rocker](https://hub.docker.com/u/rocker).
+
+```{}
+FROM rocker/shiny-verse:latest
+```
+
 
 ## Installing R packages
 
