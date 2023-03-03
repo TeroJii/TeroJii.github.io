@@ -1,6 +1,6 @@
 ---
 title: "Using Docker for Shiny Apps"
-date: "2023-02-28"
+date: "2023-03-03"
 categories: [Docker, Shiny]
 description: 'Containerizing your Shiny apps'
 draft: true
@@ -26,7 +26,7 @@ Now that Docker is up and running we need to create a `Dockerfile` for building 
 
 Ok, let's build a docker image on top of an existing rocker image. You need to do three things:
 
-1) Create an empty file called `Dockerfile` to the folder that contains your Shiny app.
+1) Create an empty file called `Dockerfile`. If your Shiny app is located inside a folder called `app`, then the `Dockerfile` should be saved in the parent folder (so `Dockerfile` inside `.` and Shiny code inside `./app`)
 
 2) Write the following commands to the Dockerfile and save it:
 
@@ -41,33 +41,32 @@ EXPOSE 3838
 3) Navigate to the folder where your `Dockerfile` is located with the terminal and build the image based on the `Dockerfile`:
 
 ```
-docker build --tag my-app:latest .
+$ docker build --tag my-app:latest .
 ```
 
-For phase 3), you can use the Command Prompt, or the Terminal which is available in either RStudio or Visual Studio Code. The advantage of using a built-in terminal from e.g. Visual Studio Code is that the terminal prompt is already opened in your working directory where you have Dockerfile. Visual Studio Code also provides help for writing Dockerfiles via the Docker extension.
-
+For phase 3), you can use the Command Prompt, or the Terminal which is available in either RStudio or Visual Studio Code. The advantage of using a built-in terminal from e.g. Visual Studio Code is that the terminal prompt is already opened in your working directory where you have saved your `Dockerfile`. Visual Studio Code also provides help for writing Dockerfiles via the Docker extension.
 
 Let's take a closer look at the contents of that `Dockerfile` and what is actually happening. The first line of code tells Docker to build the image on top of a pre-existing image called `rocker/shiny-verse`. If that is not available locally, then Docker will search and pull the image from Docker Hub. The next line of code tells Docker to copy the contents of the local `app` folder on your computer inside the Docker image. There it will place the contents under `./srv/shiny-server/`. The `app` folder should contain all the code for your Shiny app. The last line of code declares that port 3838 of the container created based on this image should be exposed to the outside environment.
 
 Now if we wish to run a container based on the image locally on our computer, we can do so with the following command:
 
 ```
-docker run -p 3838:3838 -d --rm --name mycontainer my-app:latest
+$ docker run -p 3838:3838 -d --rm --name mycontainer my-app:latest
 ```
 
 You should now find your containerized Shiny app by visiting `localhost:3838` on your web browser.
 
 ```{r}
 #| fig-cap: "Shiny app running locally inside a container."
-#| eval: false
-plot(1:4)
+#| echo: false
+knitr::include_graphics(path = "img/ShinyInDocker.png")
 ```
 
 
 Once you are done using the app you can shutdown the container with:
 
 ```
-docker stop mycontainer
+$ docker stop mycontainer
 ```
 
 This will also remove the container since we used the `--rm` flag when starting the container.
@@ -76,7 +75,7 @@ This will also remove the container since we used the `--rm` flag when starting 
 
 For example the `rocker/shiny-verse` image already includes many R-packages which have been installed. You can see information on different rocker images and their contents [here](https://github.com/rocker-org/rocker-versioned2/wiki).
 
-
+However, something you might want to include other packages as well. 
 
 ### Installing custom R packages
 
