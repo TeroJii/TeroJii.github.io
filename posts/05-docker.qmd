@@ -58,7 +58,9 @@ Now if we wish to run a container based on the image locally on our computer, we
 $ docker run -p 3838:3838 -d --rm --name mycontainer my-app:latest
 ```
 
-You should now find your containerized Shiny app by visiting `localhost:3838` on your web browser.
+Above we are telling Docker to run a container based on the `my-app:latest` image. The container is by default isolated from your computer, so the flag `-p 3838:3838` tells Docker that we want to connect from port 3838 to port 3838 in the container. The flags `-d` and `--rm` are for running the container in detached mode (logs are not printed to terminal), and for removing the container once it is stopped, respectively. Finally, with the `--name` flag, we give the container a name, which in this case is `mycontainer`.
+
+After running the command, you should find your containerized Shiny app by visiting `localhost:3838` on your web browser.
 
 ```{r}
 #| fig-cap: "Shiny app running locally inside a container."
@@ -67,7 +69,7 @@ knitr::include_graphics(path = "img/ShinyInDocker.png")
 ```
 
 
-Once you are done using the app you can shutdown the container with:
+Once you are done using the app, you can shutdown the container with:
 
 ```
 $ docker stop mycontainer
@@ -77,9 +79,9 @@ This will also remove the container since we used the `--rm` flag when starting 
 
 ## Installing R packages
 
-For example the `rocker/shiny-verse` image already includes many R-packages which have been installed. You can see information on different rocker images and their contents [here](https://github.com/rocker-org/rocker-versioned2/wiki).
+The readily available `rocker/shiny` and `rocker/shiny-verse` images include many R-packages by default. You can explore the information on different rocker images and their contents [here](https://github.com/rocker-org/rocker-versioned2/wiki). However, if you are preparing a Shiny app for a specific purpose, chances are at some point you will need to install R packages not included in the above mentioned rocker images.
 
-However, something you might want to include other packages as well. 
+
 
 ### Installing custom R packages
 
