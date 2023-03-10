@@ -81,9 +81,24 @@ This will also remove the container since we used the `--rm` flag when starting 
 
 The readily available `rocker/shiny` and `rocker/shiny-verse` images include many R-packages by default. You can explore the information on different rocker images and their contents [here](https://github.com/rocker-org/rocker-versioned2/wiki). However, if you are preparing a Shiny app for a specific purpose, chances are at some point you will need to install R packages not included in the above mentioned rocker images.
 
+Let's say we would like to use the {plotly} package in our app for some interactive plots. This is quite easy to achieve. We need to add one more command into our Dockerfile:
 
+```
+FROM rocker/shiny-verse:latest
+
+## install necessary r-libraries
+RUN R -e "install.packages('plotly', repos = 'https://cloud.r-project.org')"
+
+COPY /app /srv/shiny-server/
+
+EXPOSE 3838
+```
+
+The `RUN R -e "install.packages(...)"` command does the heavy lifting for you. All that is left for us to do is to specify the package name, and a [CRAN mirror](https://cran.r-project.org/mirrors.html). Now, we just need to rebuild the Docker image with `docker build`, and we are plotly will be available inside the containers created based on the image.
 
 ### Installing custom R packages
+
+Ok, so installing CRAN packages is pretty easy. But what should I do if I want to include a custom package (for example, an internal company package or something you wrote for yourself)?
 
 ## Using batch-files for launching a container
 
