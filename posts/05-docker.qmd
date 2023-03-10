@@ -1,32 +1,36 @@
 ---
 title: "Using Docker for Shiny Apps"
-date: "2023-03-03"
+date: "2023-12-03"
 categories: [Docker, Shiny]
 description: 'Containerizing your Shiny apps'
 draft: true
 ---
 
-[Shiny apps](https://shiny.rstudio.com/) are a great way to provide an interactive user interface for exploring data, running models or simulations, and much more. However, writing a Shiny app on your local computer is one thing, but providing it to a customer or colleague in a scalable way requires something more. Enter [Docker](https://www.docker.com/).
+[Shiny apps](https://shiny.rstudio.com/) are a great way to provide an interactive user interface for exploring data, running models, simulations, and much more. However, writing a Shiny app on your local computer is one thing, but providing it to a customer or colleague in a scalable way requires something more. Enter [Docker](https://www.docker.com/).
 
-What is Docker? Docker provides a way to run your Shiny app inside something called a *container*, which is basically a virtual environment ([read more here](https://www.docker.com/resources/what-container/)). This allows you to share your app via Cloud providers such as AWS and Azure. You can also run the containers on a local machine, without needing to worry about R installations and other dependencies.
+What is Docker? Docker provides a way to run your Shiny app inside something called a *container*, which is basically an isolated virtual environment ([read more here](https://www.docker.com/resources/what-container/)). This allows you to share your app via cloud providers such as AWS and Azure. You can also run the container on a local machine, without needing to worry about R installations and other dependencies.
 
-Sounds great. Let's see what is needed for setting your Shiny app to run inside a container.
+Sounds great. And the best thing is that it is not that difficult to containerize your Shiny app.
 
 ## Installing Docker
 
-The installation depends on your operating system, but the installation should be easy enough for Mac OS, Windows, and Linux as well. [The website](https://www.docker.com/products/docker-desktop/) has detailed instructions to guide you through the process.
+You will need to install Docker Desktop to get the job done. The installation depends on your operating system, but it should be easy enough for Mac OS, Windows, and Linux as well. [The website](https://www.docker.com/products/docker-desktop/) has detailed instructions to guide you through the process.
 
+<!--
 ### Installation for Windows
 
-The most convenient way for running docker on Windows in by installing Docker Desktop. The requirements needed for running this application are listed [here](https://docs.docker.com/desktop/install/windows-install/). For Windows versions 10/11, you will basically need to install WSL 2 to run docker. Look at the link above for detailed instructions.
+The most convenient way for running Docker on Windows in by installing Docker Desktop. The requirements needed for running this application are listed [here](https://docs.docker.com/desktop/install/windows-install/). For Windows versions 10/11, you will basically need to install WSL 2 to run docker. Look at the link above for detailed instructions.
+-->
 
 ## Building a Docker image
 
-Now that Docker is up and running we need to create a `Dockerfile` for building a Docker image of our Shiny app. What is an image then? Image is basically a blueprint for your container. It tells what code should run inside the container, and which dependencies the code has. Luckily we do not need to specify all this from zero, but we can build on top of existing images. There are thousands of images readily available in Docker Hub. For R users, several useful images are listed under [rocker](https://hub.docker.com/u/rocker).
+Now that Docker is up and running we need to create something called a `Dockerfile`. It is needed for building a Docker image of our Shiny app. What is an image then? Image is basically a blueprint for your container. It tells what code should run inside the container, and which dependencies the code has starting from operating system (OS), programming language versions, packages etc. The container itself, is basically a running instance of the said image.
 
-Ok, let's build a docker image on top of an existing rocker image. You need to do three things:
+Specifying up everything, starting from the OS, for the Docker image may sound intimidating. Luckily, we do not need to start from zero. Rather, we can build on top of existing images. There are thousands of images readily available in Docker Hub. For R users, several useful images are listed under [rocker](https://hub.docker.com/u/rocker). For Shiny apps, [rocker/shiny](https://hub.docker.com/r/rocker/shiny) and [rocker/shiny-verse](https://hub.docker.com/r/rocker/shiny-verse) are good starting points, which contain everything needed for building a simple Shiny app.
 
-1) Create an empty file called `Dockerfile`. If your Shiny app is located inside a folder called `app`, then the `Dockerfile` should be saved in the parent folder (so `Dockerfile` inside `.` and Shiny code inside `./app`)
+Let's run through the process of building a custom Docker image on top of an existing rocker image. You need to do three things:
+
+1) Create an empty file called `Dockerfile`. If the code for your Shiny app is located inside a folder called `app`, then the `Dockerfile` should be saved in the parent folder (so `Dockerfile` inside `.` and Shiny code inside `./app`)
 
 2) Write the following commands to the Dockerfile and save it:
 
@@ -38,7 +42,7 @@ COPY /app /srv/shiny-server/
 EXPOSE 3838
 ```
 
-3) Navigate to the folder where your `Dockerfile` is located with the terminal and build the image based on the `Dockerfile`:
+3) Navigate to the folder where your `Dockerfile` is located with the command line tool of your choice and build the image based on the `Dockerfile`:
 
 ```
 $ docker build --tag my-app:latest .
