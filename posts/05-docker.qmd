@@ -10,7 +10,7 @@ draft: true
 
 What is Docker? Docker provides a way to run your Shiny app inside something called a *container*, which is basically an isolated virtual environment ([read more here](https://www.docker.com/resources/what-container/)). This allows you to share your app via cloud providers such as AWS and Azure. You can also run the container on a local machine, without needing to worry about R installations and other dependencies.
 
-Sounds great. And the best thing is that it is not that difficult to containerize your Shiny app.
+Sounds great. And the best thing is that it is not that difficult to containerize your Shiny app. Let's see what is needed.
 
 ## Installing Docker
 
@@ -24,7 +24,7 @@ The most convenient way for running Docker on Windows in by installing Docker De
 
 ## Building a Docker image
 
-Now that Docker is up and running we need to create something called a `Dockerfile`. It is needed for building a Docker image of our Shiny app. What is an image then? Image is basically a blueprint for your container. It tells what code should run inside the container, and which dependencies the code has starting from operating system (OS), programming language versions, packages etc. The container itself, is basically a running instance of the said image.
+Now that Docker is up and running we need to create something called a `Dockerfile`. It is needed for building a Docker image of our Shiny app. What is an image then? Image is basically a blueprint for your container. It tells what code should run inside the container, and which dependencies the code has starting from the operating system (OS), programming language versions, packages etc. The container itself, is basically a running instance of the said image.
 
 Specifying everything, starting from the OS, for the Docker image may sound intimidating. Luckily, we do not need to start from zero. Rather, we can build on top of existing images. There are thousands of images readily available in Docker Hub. For R users, several useful images are listed under [rocker](https://hub.docker.com/u/rocker). For Shiny apps, [rocker/shiny](https://hub.docker.com/r/rocker/shiny) and [rocker/shiny-verse](https://hub.docker.com/r/rocker/shiny-verse) are good starting points, which contain everything needed for building a simple Shiny app.
 
@@ -42,15 +42,15 @@ COPY /app /srv/shiny-server/
 EXPOSE 3838
 ```
 
-3) Navigate to the folder where your `Dockerfile` is located with the command line tool of your choice and build the image based on the `Dockerfile`:
+3) Navigate to the folder where your `Dockerfile` is located with the command line tool of your choice and build the image based on the `Dockerfile` with the following command:
 
 ```
 $ docker build --tag my-app:latest .
 ```
 
-For phase 3), you can use the Command Prompt, or the Terminal which is available in either RStudio or Visual Studio Code. The advantage of using a built-in terminal from e.g. Visual Studio Code is that the terminal prompt is already opened in your working directory where you have saved your `Dockerfile`. Visual Studio Code also provides help for writing Dockerfiles via the Docker extension.
+For phase 3), you can use for example the Terminal which is available in either RStudio or Visual Studio Code. The advantage of using a built-in terminal from e.g. Visual Studio Code is that the terminal prompt is already opened in your working directory where you have saved your `Dockerfile`. Visual Studio Code also provides help for writing Dockerfiles via the Docker extension.
 
-Let's take a closer look at the contents of that `Dockerfile` and what is actually happening. The first line of code tells Docker to build the image on top of a pre-existing image called `rocker/shiny-verse`. If that is not available locally, then Docker will search and pull the image from Docker Hub. The next line of code tells Docker to copy the contents of the local `app` folder on your computer inside the Docker image. There it will place the contents under `./srv/shiny-server/`. The `app` folder should contain all the code for your Shiny app. The last line of code declares that port 3838 of the container created based on this image should be exposed to the outside environment.
+Let's take a closer look at the contents of that `Dockerfile` and what is actually happening. The first line of code tells Docker to build the image on top of a pre-existing image called `rocker/shiny-verse`. If that is not available locally, then Docker will search and pull the image from Docker Hub. The next line of code tells Docker to copy the contents of the local `app` folder on your computer, and duplicate it inside the Docker image. There it will place the contents behind the following path `./srv/shiny-server/`. The `app` folder should contain all the code for your Shiny app. The last line of code declares that port 3838 of the container created based on this image should be exposed to the outside environment.
 
 Now if we wish to run a container based on the image locally on our computer, we can do so with the following command:
 
@@ -79,7 +79,7 @@ This will also remove the container since we used the `--rm` flag when starting 
 
 ## Installing R packages
 
-The readily available `rocker/shiny` and `rocker/shiny-verse` images include many R-packages by default. You can explore the information on different rocker images and their contents [here](https://github.com/rocker-org/rocker-versioned2/wiki). However, if you are preparing a Shiny app for a specific purpose, chances are at some point you will need to install R packages not included in the above mentioned rocker images.
+The readily available `rocker/shiny` and `rocker/shiny-verse` images include many R-packages by default. You can explore the information on different rocker images and their contents [here](https://github.com/rocker-org/rocker-versioned2/wiki). However, if you are preparing a Shiny app for a specific purpose, chances are that at some point you will need to install R packages not included in the above mentioned rocker images.
 
 Let's say we would like to use the {plotly} package in our app for some interactive plots. This is quite easy to achieve. We need to add one more command into our Dockerfile:
 
@@ -94,11 +94,11 @@ COPY /app /srv/shiny-server/
 EXPOSE 3838
 ```
 
-The `RUN R -e "install.packages(...)"` command does the heavy lifting for you. All that is left for us to do is to specify the package name, and a [CRAN mirror](https://cran.r-project.org/mirrors.html) which is detailed under the `repos` argument. Now, we just need to rebuild the Docker image with `docker build`, and plotly will be available inside the containers created based on the image.
+The `RUN R -e "install.packages(...)"` command does the heavy lifting. All that is left for us to do is to specify the package name, and a [CRAN mirror](https://cran.r-project.org/mirrors.html) which is detailed under the `repos` argument. Now, we just need to rebuild the Docker image with `docker build`, and plotly will be available inside the containers created based on the image.
 
 ### Installing custom R packages
 
-Ok, so installing CRAN packages is pretty easy. But what should you do in case you want to include a custom package (for example, an internal company package or something you wrote for yourself)? Let's say we have written an R package called `myawesomepkg`, and want to use it. We have saved a copy of our package with `devtools::build()` inside a folder called `pkgs`. Installing the package locally in a regular R session is easy (just run `install.packages('pkgs/myawesomepkg_0.0.1.tar.gz', repos = NULL)`). If we want make the same package available inside Docker, we first need to copy to package `.tar.gz`-file inside the image file system, and then run the install command. The `install.packages()` command can be included inside a regular R script. Let's modify our Dockerfile one last time:
+Ok, so installing CRAN packages is pretty easy. But what should you do in case you want to include a custom package (for example, an internal company package or something you wrote for yourself)? Let's say we have written an R package called `myawesomepkg`, and want to use it. We have saved a copy of our package with `devtools::build()` inside a folder called `pkgs`. Installing the package locally in a regular R session is easy (just run `install.packages('pkgs/myawesomepkg_0.0.1.tar.gz', repos = NULL)`). If we want make the same package available inside a Docker container, we first need to copy the package `tar.gz`-file inside the image file system, and then run the install command. The `install.packages()` command can be included inside a regular R script. Let's modify our Dockerfile one last time:
 
 ```
 FROM rocker/shiny-verse:latest
@@ -118,17 +118,17 @@ COPY /app /srv/shiny-server/
 EXPOSE 3838
 ```
 
-So, now we are copying the `./pkgs/` and `./code/` folders from our local computer inside the image file system. The `./pkgs/` folder contains the `tar.gz`-file for our custom package, and the `./code/` folder contains an R-script (install_packages.R) with the needed R commands to install our custom package. Namely, one line: `install.packages('pkgs/myawesomepkg_0.0.1.tar.gz', repos = NULL)`. That's all we need to do. Our custom R package is now installed and available for our containerized Shiny app.
+So, now we are copying the `./pkgs/` and `./code/` folders from our local computer inside the image file system. The `./pkgs/` folder contains the `tar.gz`-file for our custom package, and the `./code/` folder contains an R-script (`install_packages.R`) with the needed R commands to install our custom package. Namely, one line: `install.packages('pkgs/myawesomepkg_0.0.1.tar.gz', repos = NULL)`. That's all we need to do. Our custom R package is now installed and available for our containerized Shiny app.
 
 ## Launching a container with a script file
 
-Earlier we saw that launching a container is pretty straightforward. With a readily available image, one merely needs to write the following command to the command line:
+Earlier we saw that launching a container on your local computer is pretty straightforward. With a readily available image, one merely needs to write the following command to the command line:
 
 ```
 $ docker run -p 3838:3838 -d --rm --name mycontainer my-app:latest
 ```
 
-As easy as this may seem, it is definitely not an ideal way to go if you want to make the container available to a customer or a less computer savvy colleague. Luckily, we can easily make a desktop script file which runs the command once double clicked, and opens the default browser. On Windows this is a batch file and on Mac OS a shell script file. The workflow is pretty similar.
+As easy as this may seem, it is definitely not an ideal way to go if you want to make the container available to a customer or a less computer savvy colleague. Luckily, we can easily make a desktop script file which runs the command once double clicked, and opens the default browser. On Windows this is achievable via a batch file and on Mac OS a shell script file. The workflow is pretty similar.
 
 ### Making a Windows batch file
 
@@ -141,9 +141,9 @@ start "" http://localhost:3838/
 
 Save the file, and your done. When you now double click the bat-file it will first start the container, and then open the default internet browser on `http://localhost:3838/`. Once you are done working with the container you will need to stop it either via command line by writing `docker stop mycontainer` or by using the Docker Desktop GUI. You can also write another bat-file with the docker stop command.
 
-### Making a Mac OSX shell script
+### Making a Mac OS shell script
 
-The Mac OSX equivalent to a Windows batch file is a file with a `.command` ending. It is basically a shell script which is executed in the terminal. To create one, navigate to your desktop inside the terminal app, and create an empty file by writing `touch LauchMyContainer.command`. Then you can open the file with a text editor, and add the following contents:
+The Mac OS equivalent to a Windows batch file is a file with a `.command` ending. It is basically a shell script which is executed in the terminal. To create one, navigate to your desktop inside the terminal app, and create an empty file by writing `touch LauchMyContainer.command`. Then you can open the file with a text editor, and add the following contents:
 
 ```
 docker run -p 3838:3838 -d --rm --name mycontainer my-app:latest
@@ -160,4 +160,4 @@ This is assuming you are still inside the Desktop folder with the terminal. Now 
 
 ## Final thoughts
 
-Setting up Shiny apps to run inside a container is fairly straightforward, and allows you to share your work with other people in a scalable way. The nice thing about containers is that you can easily share them via cloud platforms as well. Joe Torres has a blog post detailing the steps needed for using Azure App service to [host your Shiny app](https://joetorres531.medium.com/build-an-enterprise-ready-r-shiny-app-with-azure-and-docker-a87c73028d97).
+Setting up Shiny apps to run inside a container is fairly straightforward, and allows you to share your work with other people in a scalable way. Once the app is running inside a container, you do not need to worry about the end users operating system or about any other software dependencies for that matter. The app will just work. A huge added bonus is that you can easily share containerized apps via cloud platforms as well. If you want to know more, Joe Torres has a great blog post detailing the steps needed for using Azure App service to [host your Shiny app](https://joetorres531.medium.com/build-an-enterprise-ready-r-shiny-app-with-azure-and-docker-a87c73028d97).
