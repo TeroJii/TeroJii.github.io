@@ -3,7 +3,7 @@ title: "Using Docker for Shiny Apps"
 date: "2023-03-13"
 categories: [Docker, Shiny]
 description: 'Containerizing your Shiny apps'
-draft: true
+draft: false
 ---
 
 [Shiny apps](https://shiny.rstudio.com/) are a great way to provide an interactive user interface for exploring data, running models, simulations, and much more. However, writing a Shiny app on your local computer is one thing, but providing it to a customer or colleague in a scalable way requires something more. Enter [Docker](https://www.docker.com/).
