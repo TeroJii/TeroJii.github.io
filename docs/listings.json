@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/05-docker.html",
       "/posts/04-umap.html",
       "/posts/03-dual-axis-plots.html",
       "/posts/starting-a-website/start-a-website.html",
