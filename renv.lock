@@ -108,6 +108,23 @@
         "Rcpp"
       ]
     },
+    "SixSigma": {
+      "Package": "SixSigma",
+      "Version": "0.11.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "7b32f1b02488855b156ba3cb4ee73132",
+      "Requirements": [
+        "e1071",
+        "ggplot2",
+        "lattice",
+        "nortest",
+        "reshape2",
+        "scales",
+        "testthat",
+        "xtable"
+      ]
+    },
     "V8": {
       "Package": "V8",
       "Version": "4.3.0",
@@ -283,6 +300,16 @@
       "Requirements": [
         "rematch",
         "tibble"
+      ]
+    },
+    "class": {
+      "Package": "class",
+      "Version": "7.3-20",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "da09d82223e669d270e47ed24ac8686e",
+      "Requirements": [
+        "MASS"
       ]
     },
     "cli": {
@@ -471,6 +498,17 @@
         "tibble",
         "tidyselect",
         "vctrs"
+      ]
+    },
+    "e1071": {
+      "Package": "e1071",
+      "Version": "1.7-13",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "1046cb48d06cb40c2900d8878f03a0fe",
+      "Requirements": [
+        "class",
+        "proxy"
       ]
     },
     "ellipsis": {
@@ -822,6 +860,27 @@
       "Hash": "0080607b4a1a7b28979aecef976d8bc2",
       "Requirements": []
     },
+    "janitor": {
+      "Package": "janitor",
+      "Version": "2.2.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "5baae149f1082f466df9d1442ba7aa65",
+      "Requirements": [
+        "dplyr",
+        "hms",
+        "lifecycle",
+        "lubridate",
+        "magrittr",
+        "purrr",
+        "rlang",
+        "snakecase",
+        "stringi",
+        "stringr",
+        "tidyr",
+        "tidyselect"
+      ]
+    },
     "jquerylib": {
       "Package": "jquerylib",
       "Version": "0.1.4",
@@ -1045,6 +1104,14 @@
         "testthat"
       ]
     },
+    "nortest": {
+      "Package": "nortest",
+      "Version": "1.0-4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "e587e7a30c737ad415590976481332e4",
+      "Requirements": []
+    },
     "openssl": {
       "Package": "openssl",
       "Version": "2.0.5",
@@ -1191,6 +1258,14 @@
         "rlang"
       ]
     },
+    "proxy": {
+      "Package": "proxy",
+      "Version": "0.4-27",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "e0ef355c12942cf7a6b91a6cfaea8b3e",
+      "Requirements": []
+    },
     "ps": {
       "Package": "ps",
       "Version": "1.7.2",
@@ -1324,6 +1399,18 @@
         "withr"
       ]
     },
+    "reshape2": {
+      "Package": "reshape2",
+      "Version": "1.4.4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "bb5996d0bd962d214a11140d77589917",
+      "Requirements": [
+        "Rcpp",
+        "plyr",
+        "stringr"
+      ]
+    },
     "reticulate": {
       "Package": "reticulate",
       "Version": "1.28",
@@ -1442,6 +1529,17 @@
       "Hash": "3838071b66e0c566d55cc26bd6e27bf4",
       "Requirements": [
         "R6",
+        "stringr"
+      ]
+    },
+    "snakecase": {
+      "Package": "snakecase",
+      "Version": "0.11.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "4079070fc210c7901c0832a3aeab894f",
+      "Requirements": [
+        "stringi",
         "stringr"
       ]
     },
@@ -1736,6 +1834,14 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "40682ed6a969ea5abfd351eb67833adc",
+      "Requirements": []
+    },
+    "xtable": {
+      "Package": "xtable",
+      "Version": "1.8-4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "b8acdf8af494d9ec19ccb2481a9b11c2",
       "Requirements": []
     },
     "yaml": {
