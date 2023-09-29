@@ -1,0 +1,124 @@
+---
+title: "Six Sigma tools in R"
+date: "2023-09-29"
+categories: [Six Sigma, process improvement, R]
+description: 'Improving processes with the help of R'
+draft: true
+---
+
+
+Six Sigma ($6 \sigma$) is an umbrella term for a set of tools and techniques, which can be used for improving existing processes for example in the manufacturing industry. There are many commercial software packages which offer Six Sigma related statistical quality control tools for analyzing data. Recently I bumped into the [Six Sigma](https://cran.r-project.org/web/packages/SixSigma/index.html) R package, which provides a convenient open source alternative. Let's take a look at a few functions supplied by this package.
+
+## Methodology for improving an existing process
+
+Six Sigma projects often revolve around the **DMAIC** methodology, which stands for **D**efine, **M**easure, **A**nalyze, **I**mprove, and **C**ontrol. These five stages are integral to a Six Sigma project which aims at improving an existing process. Each stage contains a specific set of tools which are used for improving the overall quality.
+
+Let's assume that we have **defined** our project aim as improving the reproducibility of a sawmill production process, where we produce lumber with two different machines which are run by three different machine operators. The `SixSigma` package provides a bunch of handy tools for analyzing the situation. We will take a closer look at the Gage R&R method and the Ishikawa or fishbone diagrams for **measuring** and **analyzing** the project data. Let's start by loading the needed packages.
+
+```{r}
+#| label: SETUP
+#| echo: true
+#| message: false
+#| warning: false
+
+library(SixSigma)
+library(tidyverse)
+```
+
+## Creating mock data
+
+Before we can analyze anything, we need to create some mock data. Let's assume that the target of the sawmill cutting process is to produce 24 feet long pieces of lumber. In our imaginary situation, we have the three operators cut 5 pieces of lumber per machine, which we then measure to analyze the consistency of the length of lumber produced.
+
+```{r}
+#| label: data-creation
+#| echo: true
+
+set.seed(123)
+
+machines <- c("m #1", "m #2")
+operators <- c("op #1", "op #2", "op #3")
+runs <- c("run #1", "run #2", "run #3", "run #4", "run #5")
+
+# create basic measurement grid
+lumber_df <- expand.grid("machine" = factor(x = machines, levels = machines),
+                         "operator" = factor(x = operators, operators),
+                         "run" = factor(x = runs, levels = runs))
+
+# generate measurement data
+lumber_df$lumber_length <- rnorm(n = length(lumber_df$machine), mean = 24, sd = 0.03)
+
+# let's create some differences
+lumber_df <- lumber_df |>
+  mutate(
+    lumber_length = case_when(
+      # machine 2 creates slightly longer products
+      machine == "m #2" ~ lumber_length + lumber_length * 0.01,
+      # operator 3 has slighty more variation in the outcomes
+      operator == "op #3" ~ lumber_length + rnorm(n = 1, mean = 0, sd = 0.035),
+      # keep other values as is
+      TRUE ~ lumber_length
+    )
+  )
+
+head(lumber_df)
+```
+
+## Using Gage R&R
+
+Gage R&R is used to evaluate the repeatability and reproducibility of the lumber cutting process. It helps us measure the performance of the machines and operators. For example, we can determine how much of the variation in the lumber length is due to the sawing machines itself, and how much is due to the actual process variation. The `SixSigma` package provides us with a convenient function `ss.rr()` for performing the analysis. Let's imagine that we wish to keep the lumber within 0.1 feet from the target value. @fig-gage shows the visualization of the Gage R&R results.
+
+```{r}
+#| label: fig-gage
+#| fig-cap: Gage R&R diagram showing that machine \#2 produces products which are clearly above the target range.
+#| fig-width: 12
+#| fig-height: 12
+
+
+ss.rr(var = lumber_length, machine, operator, data = lumber_df, 
+	sub = "Lumber length analysis", 
+	alphaLim = 0.05,
+	errorTerm = "interaction",
+	lsl = 24 - 0.1,
+	usl = 24 + 0.1,
+	method = "crossed")
+```
+
+We can see that the function spits out a bunch of statistical results and a fairly nice looking visualization of the main results. Our main takeaway from the outputs is that machine #2 has a statistically significant effect on the length of the boards. Otherwise, it seems that the operators do not have a noticeable impact on the process outcome, which is an indicator of a robust production process.
+
+## Analyzing the potential contributors to `lumber_length`
+
+The fishbone or Ishikawa diagram can be used to write down and organize the possible causes for the performance differences between the machines and operators. In this case, the difference between the machines was quite obvious. However, we might assume that other factors such as the operators, the type of wood used in cutting, the tool used for measuring the lengths of the boards, and possibly the environment we work in also play a role in the outcome. The fishbone diagram is a convenient graph for visualizing this type of data. We can plot the contributors by using the `ss.ceDiag()` function.
+
+@fig-fishbone shows the results of our brainstorming session. We now have a list of possible contributors to the process, which can help us plan the project further.
+
+
+```{r}
+#| label: fig-fishbone
+#| fig-cap: Fishbone diagram showing possible contributors to the length of boards in a sawmill production process.
+#| fig-width: 6
+#| fig-height: 6
+
+effect <- "Board length"
+causes.gr <- c("Machine", "Operator", "Wood type", "Environment", "Measurement tool")
+causes <- vector(mode = "list", length = length(causes.gr))
+
+# possible contributors for different groups
+
+# machine
+causes[1] <- list(c("calibration", "blade", "conveyor belt"))
+# operator
+causes[2] <- list(c("operator #1", "operator #2", "operator #3"))
+# wood type
+causes[3] <- list(c("tree species", "hardness", "thickness"))
+# environment
+causes[4] <- list(c("humidity", "cleanliness"))
+# measurement tool
+causes[5] <- list(c("calibration", "producer", "type"))
+
+ss.ceDiag(effect, causes.gr, causes, sub = "Possible contributors to board length")
+
+```
+
+## Final thoughts
+
+The `SixSigma` package provides an open source alternative for common statistical and project planning tools used in the *DMAIC* methodology. The functions are well documented and easy to use. Furthermore, the plots provided by the package functions seem nice enough to include directly in reports. Give the package a go if you need to improve processes in a Six Sigma fashion.
