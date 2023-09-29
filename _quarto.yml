@@ -23,4 +23,4 @@ format:
     toc: true
 
 execute:
-  freeze: auto
+  freeze: auto # re-render only when source file changes
