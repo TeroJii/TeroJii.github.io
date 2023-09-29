@@ -5,6 +5,7 @@ date: "2023-01-05"
 categories: [blog, quarto]
 description: 'A brief story about how I built this website with Quarto'
 draft: false
+image: 'your-new-blog.png'
 ---
 
 This website is built with [Quarto](https://quarto.org/), which is an open-source publishing system. It can be used for making reports, books, presentations, websites etc. I wanted to learn how to use Quarto for making a website, so I decided to make one for myself. In this blog post I'll go trough some the basics which are needed for creating a simple website.
