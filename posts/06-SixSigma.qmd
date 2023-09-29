@@ -3,7 +3,7 @@ title: "Six Sigma tools in R"
 date: "2023-09-29"
 categories: [Six Sigma, process improvement, R]
 description: 'Improving processes with the help of R'
-draft: true
+draft: false
 ---
 
 
@@ -121,4 +121,4 @@ ss.ceDiag(effect, causes.gr, causes, sub = "Possible contributors to board lengt
 
 ## Final thoughts
 
-The `SixSigma` package provides an open source alternative for common statistical and project planning tools used in the *DMAIC* methodology. The functions are well documented and easy to use. Furthermore, the plots provided by the package functions seem nice enough to include directly in reports. Give the package a go if you need to improve processes in a Six Sigma fashion.
+The `SixSigma` package provides an open source alternative for common statistical and project planning tools used in the **DMAIC** methodology. The functions are well documented and easy to use. Furthermore, the plots provided by the package functions seem nice enough to include directly in reports. Give the package a go if you need to improve processes in a Six Sigma fashion.
