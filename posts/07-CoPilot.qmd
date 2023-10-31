@@ -1,0 +1,161 @@
+---
+title: "GitHub Copilot with R"
+date: "2023-10-31"
+categories: [GitHub Copilot, R, generative AI]
+description: 'Are programmers needed anymore?'
+draft: false
+image: 'img/AIpairProgrammer.jpg'
+---
+
+I've been experimenting on writing R code with the help of GitHub copilot since last week. Marketed as your AI pair programmer, Github copilot helps you write code using generative AI. It can best aid you in the following five tasks:
+
+1) Writing functions
+2) Writing comments
+3) Writing tests
+4) Writing documentation
+5) Writing code
+
+
+The above five bullets were proposed by copilot itself. Let's take copilot out for a test drive with the `mtcars` data, and see what help it provides for data visualization and wrangling tasks.
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+#| code-fold: true
+
+library(tidyverse)
+
+```
+
+## Visualizing the data
+
+Let's visualize the data with ggplot2 using copilot. We want to plot the mpg as a function hp. We also want to facet the plot by cyl.
+
+```{r}
+mtcars %>% 
+  ggplot(aes(x = hp, y = mpg)) +
+  geom_point() +
+  facet_wrap(~ cyl)
+
+```
+
+Copilot created a basic visualization of the data with just a few keystrokes, without me needing to write a single line of code.
+
+
+Let's now create a custom function which allows us to also color the points according to one of the following variables in the data set: vs, ab, gear, carb.
+
+```{r}
+
+plot_mtcars <- function(x, y, color) {
+  mtcars %>% 
+    ggplot(aes(x = {{x}}, y = {{y}}, color = {{color}})) +
+    geom_point() +
+    facet_wrap(~ cyl)
+}
+
+# test the function by plotting mpg as a function of hp, and color by vs
+plot_mtcars(hp, mpg, vs)
+
+```
+
+Copilot was able to create the function with a few adjustments to the above text. Pretty cool. The color should really be a factor though. Let's instruct our pair programmer more.
+
+We want to change the plotting function so that the coloring variable is a factor. We also want to add a title to the plot.
+
+```{r}
+# improved function where color is a factor and the user can add a title
+plot_mtcars <- function(x, y, color, title) {
+  mtcars %>% 
+    ggplot(aes(x = {{x}}, y = {{y}}, color = factor({{color}}))) +
+    geom_point() +
+    facet_wrap(~ cyl) +
+    labs(title = {{title}})
+}
+
+# test the function by plotting mpg as a function of hp, and color by gear
+plot_mtcars(hp, mpg, gear, "Plotting mpg as a function of hp, and color by gear")
+
+```
+
+Ok, I needed to write a comment above the function to give the user the ability to add the title text. So, with just one small tweak we got what we wanted. Let's now give the steering wheel to copilot and see where it takes us.
+
+> Let's now create a function which allows us to plot the data with a linear regression line. We also want to add a legend to the plot.
+
+```{r}
+#| warning: false
+#| message: false
+
+# improved function where color is a factor and the user can add a title
+plot_mtcars <- function(x, y, color, title) {
+  mtcars %>% 
+    ggplot(aes(x = {{x}}, y = {{y}}, color = factor({{color}}))) +
+    geom_point() +
+    geom_smooth(method = "lm") +
+    facet_wrap(~ cyl) +
+    labs(title = {{title}})
+}
+
+# test the function by plotting mpg as a function of hp, and color by gear
+plot_mtcars(hp, mpg, gear, "Plotting mpg as a function of hp, and color by gear")
+
+```
+
+Ok, the final suggestion was purely from Github copilot, and it added a linear fit to our plotting function. I'm not sure about the stuff regarding the legend, since our plot included a legend already. Nevertheless, it does seem like copilot can also steer the user with regards the direction of the document / analysis. In this particular case, this is probably not the direction I would have personally taken, but I guess it's not always a bad thing to get some suggestions outside of your self constructed mental box.
+
+## Data wrangling
+
+One of the places where I've found copilot most useful is in reducing redundant typing. One example would be the creation of conditional data variables. Let's see how copilot can help us in creating a `case_when` statement.
+
+```{r}
+
+mtcars %>% 
+  mutate(cyl_factor = case_when(
+    cyl == 4 ~ "four",
+    cyl == 6 ~ "six",
+    cyl == 8 ~ "eight"
+  )) %>%
+  # select only make of the car original cylinder column and the new factor column
+  select(mpg, cyl, cyl_factor) %>%
+  head()
+
+```
+
+Ok, cool... we got an example of a `case_when` structure created by copilot. Excluding the select-statement, Github copilot was able to create the above `case_when` example from the natural language description above the code. The select-statement was created by copilot based on the comment I added after the first code suggestion.
+
+Even more complicated `case_when` structures are possible just by describing the structure through some examples. Let's look at one more example.
+
+```{r}
+# create a new column based on the carb column values
+# the new column should be called carb_factor
+# if carb has a value of 4 the carb_factor should be "four carburetors"
+# Print out the head of the modified data.frame with only the carb and carb_factor columns
+
+mtcars %>% 
+  mutate(carb_factor = case_when(
+    carb == 4 ~ "four carburetors",
+    carb == 1 ~ "one carburetor",
+    carb == 2 ~ "two carburetors",
+    carb == 3 ~ "three carburetors",
+    carb == 6 ~ "six carburetors",
+    carb == 8 ~ "eight carburetors"
+  )) %>%
+  select(carb, carb_factor) %>%
+  head()
+
+```
+
+The above code was created entirely by copilot based on the comments above the code. Based on my testing so far, I find this one the most useful features of copilot. Sometimes I also let copilot suggest implementations of things I could easily program myself. Occasionally, copilot suggests using functions I might have not thought of using. So, I guess it in a way lives up to the promise of being a pair programmer by broadening my horizons.
+
+## Final thoughts
+
+Github copilot is not going to replace programmers just yet. Often times it needs the help of a human in breaking down the programming task into smaller pieces. So you need to be able and willing to help copilot help you. Nevertheless, as we saw above, we are not talking about just a glorified auto complete. Copilot is capable of genuinely making some tasks, such as repetitive conditional statements, easier and less laborious to implement. 
+
+
+Let's give the final word to copilot: 
+
+*Github copilot is not going to replace programmers just yet...*
+
+> However, it can be a useful tool in speeding up the development process. It can also be a useful tool in learning new programming languages. I'm looking forward to seeing how the tool develops in the future.
+
+
