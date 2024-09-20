@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Tero Jalkanen">
-<meta name="dcterms.date" content="2023-03-13">
-<meta name="description" content="Containerizing your Shiny apps">
+<meta name="dcterms.date" content="2024-09-20">
+<meta name="description" content="How to run a large language model on your computer">
 
-<title>Tero Jalkanen - Using Docker for Shiny Apps</title>
+<title>Tero Jalkanen - Chatting locally</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,6 +22,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -125,16 +159,11 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#installing-docker" id="toc-installing-docker" class="nav-link active" data-scroll-target="#installing-docker">Installing Docker</a></li>
-  <li><a href="#building-a-docker-image" id="toc-building-a-docker-image" class="nav-link" data-scroll-target="#building-a-docker-image">Building a Docker image</a></li>
-  <li><a href="#installing-r-packages" id="toc-installing-r-packages" class="nav-link" data-scroll-target="#installing-r-packages">Installing R packages</a>
+  <li><a href="#what-do-we-need" id="toc-what-do-we-need" class="nav-link active" data-scroll-target="#what-do-we-need">What do we need?</a></li>
+  <li><a href="#creating-a-simple-gui-with-python" id="toc-creating-a-simple-gui-with-python" class="nav-link" data-scroll-target="#creating-a-simple-gui-with-python">Creating a simple GUI with Python</a>
   <ul class="collapse">
-  <li><a href="#installing-custom-r-packages" id="toc-installing-custom-r-packages" class="nav-link" data-scroll-target="#installing-custom-r-packages">Installing custom R packages</a></li>
-  </ul></li>
-  <li><a href="#launching-a-container-with-a-script-file" id="toc-launching-a-container-with-a-script-file" class="nav-link" data-scroll-target="#launching-a-container-with-a-script-file">Launching a container with a script file</a>
-  <ul class="collapse">
-  <li><a href="#making-a-windows-batch-file" id="toc-making-a-windows-batch-file" class="nav-link" data-scroll-target="#making-a-windows-batch-file">Making a Windows batch file</a></li>
-  <li><a href="#making-a-mac-os-shell-script" id="toc-making-a-mac-os-shell-script" class="nav-link" data-scroll-target="#making-a-mac-os-shell-script">Making a Mac OS shell script</a></li>
+  <li><a href="#setting-up-a-conda-environment" id="toc-setting-up-a-conda-environment" class="nav-link" data-scroll-target="#setting-up-a-conda-environment">Setting up a conda environment</a></li>
+  <li><a href="#creating-a-simple-streamlit-app" id="toc-creating-a-simple-streamlit-app" class="nav-link" data-scroll-target="#creating-a-simple-streamlit-app">Creating a simple Streamlit app</a></li>
   </ul></li>
   <li><a href="#final-thoughts" id="toc-final-thoughts" class="nav-link" data-scroll-target="#final-thoughts">Final thoughts</a></li>
   </ul>
@@ -145,16 +174,19 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Using Docker for Shiny Apps</h1>
+<h1 class="title">Chatting locally</h1>
   <div class="quarto-categories">
+    <div class="quarto-category">generative AI</div>
+    <div class="quarto-category">Ollama</div>
+    <div class="quarto-category">Python</div>
     <div class="quarto-category">Docker</div>
-    <div class="quarto-category">Shiny</div>
+    <div class="quarto-category">LangChain</div>
   </div>
   </div>
 
 <div>
   <div class="description">
-    Containerizing your Shiny apps
+    How to run a large language model on your computer
   </div>
 </div>
 
@@ -171,7 +203,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">March 13, 2023</p>
+      <p class="date">September 20, 2024</p>
     </div>
   </div>
   
@@ -183,115 +215,77 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><a href="https://shiny.rstudio.com/">Shiny apps</a> are a great way to provide an interactive user interface for exploring data, running models, simulations, and much more. However, writing a Shiny app on your local computer is one thing, but providing it to a customer or colleague in a scalable way requires something more. Enter <a href="https://www.docker.com/">Docker</a>.</p>
-<p>What is Docker? Docker provides a way to run your Shiny app inside something called a <em>container</em>, which is basically an isolated virtual environment (<a href="https://www.docker.com/resources/what-container/">read more here</a>). This allows you to share your app via cloud providers such as AWS and Azure. You can also run the container on a local machine, without needing to worry about R installations and other dependencies.</p>
-<p>Sounds great. And the best thing is that it is not that difficult to containerize your Shiny app. Let’s see what is needed.</p>
-<section id="installing-docker" class="level2">
-<h2 class="anchored" data-anchor-id="installing-docker">Installing Docker</h2>
-<p>You will need to install Docker Desktop to get the job done. The installation depends on your operating system, but it should be easy enough for Mac OS, Windows, and Linux as well. <a href="https://www.docker.com/products/docker-desktop/">The website</a> has detailed instructions to guide you through the process.</p>
-<!--
-### Installation for Windows
-
-The most convenient way for running Docker on Windows in by installing Docker Desktop. The requirements needed for running this application are listed [here](https://docs.docker.com/desktop/install/windows-install/). For Windows versions 10/11, you will basically need to install WSL 2 to run docker. Look at the link above for detailed instructions.
--->
-</section>
-<section id="building-a-docker-image" class="level2">
-<h2 class="anchored" data-anchor-id="building-a-docker-image">Building a Docker image</h2>
-<p>Now that Docker is up and running we need to create something called a <code>Dockerfile</code>. It is needed for building a Docker image of our Shiny app. What is an image then? Image is basically a blueprint for your container. It tells what code should run inside the container, and which dependencies the code has starting from the operating system (OS), programming language versions, packages etc. The container itself, is basically a running instance of the said image.</p>
-<p>Specifying everything, starting from the OS, for the Docker image may sound intimidating. Luckily, we do not need to start from zero. Rather, we can build on top of existing images. There are thousands of images readily available in Docker Hub. For R users, several useful images are listed under <a href="https://hub.docker.com/u/rocker">rocker</a>. For Shiny apps, <a href="https://hub.docker.com/r/rocker/shiny">rocker/shiny</a> and <a href="https://hub.docker.com/r/rocker/shiny-verse">rocker/shiny-verse</a> are good starting points, which contain everything needed for building a simple Shiny app.</p>
-<p>Let’s run through the process of building a custom Docker image on top of an existing rocker image. You need to do three things:</p>
-<ol type="1">
-<li><p>Create an empty file called <code>Dockerfile</code>. If the code for your Shiny app is located inside a folder called <code>app</code>, then the <code>Dockerfile</code> should be saved in the parent folder (so <code>Dockerfile</code> inside <code>.</code> and Shiny code inside <code>./app</code>)</p></li>
-<li><p>Write the following commands to the Dockerfile and save it:</p></li>
-</ol>
-<pre><code>FROM rocker/shiny-verse:latest
-
-COPY /app /srv/shiny-server/
-
-EXPOSE 3838</code></pre>
-<ol start="3" type="1">
-<li>Navigate to the folder where your <code>Dockerfile</code> is located with the command line tool of your choice and build the image based on the <code>Dockerfile</code> with the following command:</li>
-</ol>
-<pre><code>$ docker build --tag my-app:latest .</code></pre>
-<p>For phase 3), you can use for example the Terminal which is available in either RStudio or Visual Studio Code. The advantage of using a built-in terminal from e.g.&nbsp;Visual Studio Code is that the terminal prompt is already opened in your working directory where you have saved your <code>Dockerfile</code>. Visual Studio Code also provides help for writing Dockerfiles via the Docker extension.</p>
-<p>Let’s take a closer look at the contents of that <code>Dockerfile</code> and what is actually happening. The first line of code tells Docker to build the image on top of a pre-existing image called <code>rocker/shiny-verse</code>. If that is not available locally, then Docker will search and pull the image from Docker Hub. The next line of code tells Docker to copy the contents of the local <code>app</code> folder on your computer, and duplicate it inside the Docker image. There it will place the contents behind the following path <code>./srv/shiny-server/</code>. The <code>app</code> folder should contain all the code for your Shiny app. The last line of code declares that port 3838 of the container created based on this image should be exposed to the outside environment.</p>
-<p>Now if we wish to run a container based on the image locally on our computer, we can do so with the following command:</p>
-<pre><code>$ docker run -p 3838:3838 -d --rm --name mycontainer my-app:latest</code></pre>
-<p>Above we are telling Docker to run a container based on the <code>my-app:latest</code> image. The container is by default isolated from your computer, so the flag <code>-p 3838:3838</code> tells Docker that we want to connect from port 3838 to port 3838 in the container. The flags <code>-d</code> and <code>--rm</code> are for running the container in detached mode (logs are not printed to terminal), and for removing the container once it is stopped, respectively. Finally, with the <code>--name</code> flag, we give the container a name, which in this case is <code>mycontainer</code>.</p>
-<p>After running the command, you should find your containerized Shiny app by visiting <code>localhost:3838</code> on your web browser.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="img/ShinyInDocker.png" class="img-fluid figure-img" width="908"></p>
-<figcaption>Shiny app running locally inside a container.</figcaption>
+<p>I’ve been testing different large language models (LLMs) lately, and wanted to write a small guide on how to run a LLM locally on your machine. There are actually several models which will work nicely just by using your computer’s CPU. The set up is pretty straightforward.</p>
+<section id="what-do-we-need" class="level2">
+<h2 class="anchored" data-anchor-id="what-do-we-need">What do we need?</h2>
+<p>There are different ways to run a LLM locally, but I will show you how to do it using Docker and Ollama. Ollama is a lightweight framework that allows you to run different language models locally. <a href="https://ollama.com/">The Ollama website</a> lists a large number of models that you can access.</p>
+<p>It is possible to install Ollama directly on your computer, but you can also use Docker to run it. First, we need to pull the official image from Docker Hub.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> pull ollama/ollama</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>After this we can run the image using the following command:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-d</span> <span class="at">-p</span> 11434:11434 <span class="at">--name</span> ollama ollama/ollama</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This will start the Ollama server inside a Docker container. You can now access the server using the following URL: <code>http://localhost:11434/</code>. Your web browser should display a simple message stating <code>Ollama is running</code> if you visit the URL. This signals that everything is working as it should and the system is up and running on our machine.</p>
+<p>We can now use Ollama to interact with the LLM on the command line. Use the following command to start a chat with the llama2 model:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec <span class="at">-it</span> ollama ollama run llama2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This will first pull the model to your docker container, and start a chat with the llama2 model. Chatting with the model is done by typing messages on the command line. Ollama is using your computer’s CPU to run the model, so it will not be as fast as ChatGPT, but it will be completely private. It is also possible to run the model on a GPU if you happen to have a new Nvidia GPU for example.</p>
+<div id="fig-command-line" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-command-line-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/local-llms/llama2-command-line.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-command-line-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Chatting with llama2 using the command line.
+</figcaption>
 </figure>
 </div>
+<p>You can replace <code>llama2</code> with any of the models listed on the Ollama website. The website also gives information on the memory requirements for some models. You can also stop and restart your container without having to re-download the LLM. However, if you remove your container, you will naturally have to download the language model again when starting new containers.</p>
+</section>
+<section id="creating-a-simple-gui-with-python" class="level2">
+<h2 class="anchored" data-anchor-id="creating-a-simple-gui-with-python">Creating a simple GUI with Python</h2>
+<p>Now that we are successfully running a LLM locally, we can create a simple GUI to interact with the model. I will show you how to do this using Python and Streamlit.</p>
+<section id="setting-up-a-conda-environment" class="level3">
+<h3 class="anchored" data-anchor-id="setting-up-a-conda-environment">Setting up a conda environment</h3>
+<p>I’ve been using the Anaconda distribution for Python, so I will show you how to set up a conda environment for this project. Let’s head to the terminal and write:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> create <span class="at">--name</span> local-llms <span class="at">-c</span> conda-forge langchain streamlit</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate local-llms</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install langchain_community</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This should provide you with a <code>local-llms</code> conda environment with the necessary Python libraries installed. Next, we will need to create a simple Python script to interact with the LLM.</p>
+</section>
+<section id="creating-a-simple-streamlit-app" class="level3">
+<h3 class="anchored" data-anchor-id="creating-a-simple-streamlit-app">Creating a simple Streamlit app</h3>
+<p>Let’s start by creating a file called <code>app.py</code>, which will contain our Streamlit app (the name of the file can be <code>my-fancy-app.py</code> or whatever you want, but <code>app.py</code> seems to be the convention). The contents are fairly simple:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> streamlit <span class="im">as</span> st</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> langchain_community.llms <span class="im">import</span> Ollama</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize the Ollama object</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>ollama <span class="op">=</span> Ollama(base_url<span class="op">=</span><span class="st">'http://localhost:11434'</span>, model<span class="op">=</span><span class="st">'llama2'</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># App Framework</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>st.title(<span class="st">"Ollama Streamlit app with LangChain 🦜🔗"</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>prompt<span class="op">=</span>st.text_input(<span class="st">"Insert in your prompt here"</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Show response on the screen if there is a prompt</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> prompt:</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    response <span class="op">=</span> ollama.invoke(prompt)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    st.write(response)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You need to have your Docker container up and running for the app to work. Let’s run the app by entering the following command to the terminal:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">streamlit</span> run app.py</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This will launch a new tab in your web browser with the Streamlit app. You can now chat with the LLM using a simple GUI as shown in <a href="#fig-gui-exampl" class="quarto-xref">Figure&nbsp;2</a>.</p>
+<div id="fig-gui-exampl" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-gui-exampl-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="img/local-llms/StreamlitApp.png" class="img-fluid figure-img">
 </div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gui-exampl-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: A simple graphical user interface for your local LLM.
+</figcaption>
+</figure>
 </div>
-<p>Once you are done using the app, you can shutdown the container with:</p>
-<pre><code>$ docker stop mycontainer</code></pre>
-<p>This will also remove the container since we used the <code>--rm</code> flag when starting the container.</p>
-</section>
-<section id="installing-r-packages" class="level2">
-<h2 class="anchored" data-anchor-id="installing-r-packages">Installing R packages</h2>
-<p>The readily available <code>rocker/shiny</code> and <code>rocker/shiny-verse</code> images include many R-packages by default. You can explore the information on different rocker images and their contents <a href="https://github.com/rocker-org/rocker-versioned2/wiki">here</a>. However, if you are preparing a Shiny app for a specific purpose, chances are that at some point you will need to install R packages not included in the above mentioned rocker images.</p>
-<p>Let’s say we would like to use the {plotly} package in our app for some interactive plots. This is quite easy to achieve. We need to add one more command into our Dockerfile:</p>
-<pre><code>FROM rocker/shiny-verse:latest
-
-## install necessary r-libraries
-RUN R -e "install.packages('plotly', repos = 'https://cloud.r-project.org')"
-
-COPY /app /srv/shiny-server/
-
-EXPOSE 3838</code></pre>
-<p>The <code>RUN R -e "install.packages(...)"</code> command does the heavy lifting. All that is left for us to do is to specify the package name, and a <a href="https://cran.r-project.org/mirrors.html">CRAN mirror</a> which is detailed under the <code>repos</code> argument. Now, we just need to rebuild the Docker image with <code>docker build</code>, and plotly will be available inside the containers created based on the image.</p>
-<section id="installing-custom-r-packages" class="level3">
-<h3 class="anchored" data-anchor-id="installing-custom-r-packages">Installing custom R packages</h3>
-<p>Ok, so installing CRAN packages is pretty easy. But what should you do in case you want to include a custom package (for example, an internal company package or something you wrote for yourself)? Let’s say we have written an R package called <code>myawesomepkg</code>, and want to use it. We have saved a copy of our package with <code>devtools::build()</code> inside a folder called <code>pkgs</code>. Installing the package locally in a regular R session is easy (just run <code>install.packages('pkgs/myawesomepkg_0.0.1.tar.gz', repos = NULL)</code>). If we want make the same package available inside a Docker container, we first need to copy the package <code>tar.gz</code>-file inside the image file system, and then run the install command. The <code>install.packages()</code> command can be included inside a regular R script. Let’s modify our Dockerfile one last time:</p>
-<pre><code>FROM rocker/shiny-verse:latest
-
-## install necessary r-libraries
-RUN R -e "install.packages('plotly', repos = 'https://cloud.r-project.org')"
-
-## copy files for internal package installations
-COPY /pkgs /pkgs
-COPY /code /code
-
-## install R-packages
-RUN Rscript /code/install_packages.R
-
-COPY /app /srv/shiny-server/
-
-EXPOSE 3838</code></pre>
-<p>So, now we are copying the <code>./pkgs/</code> and <code>./code/</code> folders from our local computer inside the image file system. The <code>./pkgs/</code> folder contains the <code>tar.gz</code>-file for our custom package, and the <code>./code/</code> folder contains an R-script (<code>install_packages.R</code>) with the needed R commands to install our custom package. Namely, one line: <code>install.packages('pkgs/myawesomepkg_0.0.1.tar.gz', repos = NULL)</code>. That’s all we need to do. Our custom R package is now installed and available for our containerized Shiny app.</p>
-</section>
-</section>
-<section id="launching-a-container-with-a-script-file" class="level2">
-<h2 class="anchored" data-anchor-id="launching-a-container-with-a-script-file">Launching a container with a script file</h2>
-<p>Earlier we saw that launching a container on your local computer is pretty straightforward. With a readily available image, one merely needs to write the following command to the command line:</p>
-<pre><code>$ docker run -p 3838:3838 -d --rm --name mycontainer my-app:latest</code></pre>
-<p>As easy as this may seem, it is definitely not an ideal way to go if you want to make the container available to a customer or a less computer savvy colleague. Luckily, we can easily make a desktop script file which runs the command once double clicked, and opens the default browser. On Windows this is achievable via a batch file and on Mac OS a shell script file. The workflow is pretty similar.</p>
-<section id="making-a-windows-batch-file" class="level3">
-<h3 class="anchored" data-anchor-id="making-a-windows-batch-file">Making a Windows batch file</h3>
-<p>Open the Notepad and save an empty file on your desktop with the name of e.g.&nbsp;<code>LauchMyContainer.bat</code>. Write the following contents inside the file:</p>
-<pre><code>docker run -p 3838:3838 -d --rm --name mycontainer my-app:latest
-start "" http://localhost:3838/</code></pre>
-<p>Save the file, and your done. When you now double click the bat-file it will first start the container, and then open the default internet browser on <code>http://localhost:3838/</code>. Once you are done working with the container you will need to stop it either via command line by writing <code>docker stop mycontainer</code> or by using the Docker Desktop GUI. You can also write another bat-file with the docker stop command.</p>
-</section>
-<section id="making-a-mac-os-shell-script" class="level3">
-<h3 class="anchored" data-anchor-id="making-a-mac-os-shell-script">Making a Mac OS shell script</h3>
-<p>The Mac OS equivalent to a Windows batch file is a file with a <code>.command</code> ending. It is basically a shell script which is executed in the terminal. To create one, navigate to your desktop inside the terminal app, and create an empty file by writing <code>touch LauchMyContainer.command</code>. Then you can open the file with a text editor, and add the following contents:</p>
-<pre><code>docker run -p 3838:3838 -d --rm --name mycontainer my-app:latest
-open http://localhost:3838/</code></pre>
-<p>Finally, you will probably need to run the following command in the terminal to adjust user permissions to make the file run.</p>
-<pre><code>$ chmod u+x ./LauchMyContainer.command</code></pre>
-<p>This is assuming you are still inside the Desktop folder with the terminal. Now the script file will start the container and open the internet browser when double clicked.</p>
 </section>
 </section>
 <section id="final-thoughts" class="level2">
 <h2 class="anchored" data-anchor-id="final-thoughts">Final thoughts</h2>
-<p>Setting up Shiny apps to run inside a container is fairly straightforward, and allows you to share your work with other people in a scalable way. Once the app is running inside a container, you do not need to worry about the end users operating system or about any other software dependencies for that matter. The app will just work. A huge added bonus is that you can easily share containerized apps via cloud platforms as well. If you want to know more, Joe Torres has a great blog post detailing the steps needed for using Azure App service to <a href="https://joetorres531.medium.com/build-an-enterprise-ready-r-shiny-app-with-azure-and-docker-a87c73028d97">host your Shiny app</a>.</p>
+<p>We saw above how to set up a locally running LLM using Docker and Ollama. We can start building more elaborate app prototypes on top of this setup. Running a LLM locally is a great way to experiment with different models without having to rely on external cloud providers. It is also a good way to keep your data private. Additionally, the environmental impacts of running a LLM locally can be significantly smaller compared to running it on a cloud service.</p>
 
 
 </section>

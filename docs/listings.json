@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/08-local-llms.html",
       "/posts/07-CoPilot.html",
       "/posts/06-SixSigma.html",
       "/posts/05-docker.html",
