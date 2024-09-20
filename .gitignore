@@ -4,3 +4,8 @@
 .Ruserdata
 
 /.quarto/
+
+# exclude drafts
+_freeze/posts/0x*
+docs/posts/0x*
+posts/0x*
